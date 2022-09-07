@@ -108,7 +108,7 @@ void LogsVector::mergeSort(){
  * 
  * @param left- int índice del inicio de la sublista
  * @param inicio- int índice del final de la sublista
- * 
+ * @complejidad O(n log n)
  */
 void LogsVector::mergeSort(int left, int right) {
     int centro;
@@ -145,6 +145,7 @@ void LogsVector::bubbleSort() {
  * @param date-Date* con la fecha a buscar
  * @param first-bool si quieres regresar la primera posición o la última
  * @return int con la posición del match
+ * @complejidad O(log n)
  */
 int LogsVector::searchByDate(Date* date,bool first){ // ! Corregir
     int inicio = 0;

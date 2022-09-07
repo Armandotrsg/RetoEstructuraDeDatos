@@ -27,6 +27,7 @@ void DataBase::addLog(Logs* log) {
  *        en el map y los ordena de acuerdo a su fecha usando merge sort
  * 
  * @param fileName 
+ * @complejidad O(n)
  */
 void DataBase::readFile(std::string fileName) {
     std::ifstream file;
@@ -106,8 +107,9 @@ std::ostream& operator<<(std::ostream& os, DataBase& db) {
  * @param date1-Date* con la fecha inicial
  * @param date2-Date* con la fecha final 
  * @return LogsVector* 
+ * @complejidad O(n)
  */
-LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2){ // ! FALTA IMPLEMENTAR
+LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2){ 
     //Verificar que date 1 sea menor que date 2
     if (*date2 < date1){
         Date* temp = date1;
@@ -155,6 +157,13 @@ LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2){ // ! FALTA 
     return logsInDates;
 }
 
+/**
+ * @brief Método que busca los logs entre 2 fechas y los escribe en un archivo
+ * 
+ * @param date1-Date* con la fecha inicial
+ * @param date2-Date* con la fecha final
+ * @param fileName-string con el nombre del archivo
+ */
 void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName){
     std::ofstream file;
     file.open(fileName, std::ios::out);
