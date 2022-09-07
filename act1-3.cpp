@@ -18,20 +18,17 @@ int main() {
     std::cout << *db["Sep"] << std::endl; */
     DataBase* db = new DataBase();
     db->readFile("bitacora.txt");
-    //Count every slot in the map
-    std::cout << "Jan: " << db->at("Jan")->getLogs().size() << std::endl;
-    std::cout << "Feb: " << db->at("Feb")->getLogs().size() << std::endl;
-    std::cout << "Mar: " << db->at("Mar")->getLogs().size() << std::endl;
-    std::cout << "Apr: " << db->at("Apr")->getLogs().size() << std::endl;
-    std::cout << "May: " << db->at("May")->getLogs().size() << std::endl;
-    std::cout << "Jun: " << db->at("Jun")->getLogs().size() << std::endl;
-    std::cout << "Jul: " << db->at("Jul")->getLogs().size() << std::endl;
-    std::cout << "Aug: " << db->at("Aug")->getLogs().size() << std::endl;
-    std::cout << "Sep: " << db->at("Sep")->getLogs().size() << std::endl;
-    std::cout << "Oct: " << db->at("Oct")->getLogs().size() << std::endl;
-    std::cout << "Nov: " << db->at("Nov")->getLogs().size() << std::endl;
-    std::cout << "Dec: " << db->at("Dec")->getLogs().size() << std::endl;
+    std::cout << "Ingresa una fecha con mes y día: ";
+    std::string date1;
+    getline(std::cin, date1);
+    std::cout << "Ingresa otra fecha con mes y día: ";
+    std::string date2;
+    getline(std::cin, date2);
+    //Write to file
+    db->writeToFile(new Date(date1), new Date(date2), "bitacoraOrdenada1-3.txt");
 
+    
+    
     
     return 0;
 }

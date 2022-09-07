@@ -138,3 +138,38 @@ void LogsVector::bubbleSort() {
         }
     }
 }
+
+/**
+ * @brief Regresa la primera posición en la que haga match con la primera fecha
+ * 
+ * @param date-Date* con la fecha a buscar
+ * @param first-bool si quieres regresar la primera posición o la última
+ * @return int con la posición del match
+ */
+int LogsVector::searchByDate(Date* date,bool first){ // ! Corregir
+    int inicio = 0;
+    int fin = this->logs.size() -1;
+    int centro;
+    while (inicio <= fin) {
+        centro = (inicio + fin) / 2;
+        if (this->logs[centro]->getDate()->getDay() == date->getDay()) {
+            break;
+        } else if (this->logs[centro]->getDate()->getDay() < date->getDay()) {
+            inicio = centro + 1;
+        } else {
+            fin = centro - 1;
+        }
+    }
+    if (first){ //Regresar la primera posición en la que se encuentre la fecha
+        while (centro > 0 && this->logs[centro - 1]->getDate()->getDay() == date->getDay()) {
+            centro--;
+        }
+    } else { //Regresar la última posición en la que se encuentre la fecha
+        while (centro < this->logs.size() - 1 && this->logs[centro + 1]->getDate()->getDay() == date->getDay()) {
+            centro++;
+        }
+    }
+    
+    return centro;
+
+}

@@ -11,6 +11,22 @@ Date::Date() {
     this->minute = 0;
     this->second = 0;
 };
+
+/**
+ * @brief Constructor de la clase Date para cuando el usuario ingrese el mes y día que busca
+ * 
+ * @param monthDay-string con el mes y el día: "Jan 1" o "Feb 22"
+ */
+Date::Date(std::string monthDay) {
+    std::string month = monthDay.substr(0, 3);
+    std::string day = monthDay.substr(4, monthDay.length());
+    this->month = std::pair<std::string, int>{month, MONTHS.at(month)};
+    this->day = std::stoi(day);
+    this->hour = 0;
+    this->minute = 0;
+    this->second = 0;
+}
+
 /**
  * @brief Constructor de la clase Date
  * 
@@ -107,6 +123,31 @@ bool Date::operator!=(Date* date) {
 };
 
 /**
+ * @brief Transforma el objeto Date a un string
+ * 
+ * @return std::string 
+ */
+std::string Date::toString() {
+    std::string dayNum = std::to_string(this->day);
+    std::string hourNum = std::to_string(this->hour);
+    std::string minuteNum = std::to_string(this->minute);
+    std::string secondNum = std::to_string(this->second);
+    if (dayNum.length() == 1) {
+        dayNum = "0" + dayNum;
+    }
+    if (hourNum.length() == 1) {
+        hourNum = "0" + hourNum;
+    }
+    if (minuteNum.length() == 1) {
+        minuteNum = "0" + minuteNum;
+    }
+    if (secondNum.length() == 1) {
+        secondNum = "0" + secondNum;
+    }
+    return this->month.first + " " + dayNum + " " + hourNum + ":" + minuteNum + ":" + secondNum;
+};
+
+/**
  * @brief Sobrecarga del operador <
  * 
  * @param date- objeto Date con el que se va a comparar
@@ -177,6 +218,6 @@ bool Date::operator>=(Date* date) {
  * @return ostream& 
  */
 std::ostream& operator<<(std::ostream& os, Date& date) {
-    os << date.getMonthName() << " " << date.day << ", " << date.hour << ":" << date.minute << ":" << date.second;
+    os << date.toString();
     return os;
 }

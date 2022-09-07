@@ -5,11 +5,11 @@
  * 
  */
 DataBase::DataBase() {
-    this->logs = std::map<std::string, LogsVector*>{
+    this->logs = std::map<int, LogsVector*>{
         //? Así se declaran vectores vacíos
-        {"Jan", new LogsVector()}, {"Feb", new LogsVector()}, {"Mar", new LogsVector()}, {"Apr", new LogsVector()},
-        {"May", new LogsVector()}, {"Jun", new LogsVector()}, {"Jul", new LogsVector()}, {"Aug", new LogsVector()},
-        {"Sep", new LogsVector()}, {"Oct", new LogsVector()}, {"Nov", new LogsVector()}, {"Dec", new LogsVector()}};
+        {1, new LogsVector()}, {2, new LogsVector()}, {3, new LogsVector()}, {4, new LogsVector()},
+        {5, new LogsVector()}, {6, new LogsVector()}, {7, new LogsVector()}, {8, new LogsVector()},
+        {9, new LogsVector()}, {10, new LogsVector()}, {11, new LogsVector()}, {12, new LogsVector()}};
 }
 
 /**
@@ -18,7 +18,7 @@ DataBase::DataBase() {
  * @param logs- Log* con los logs
  */
 void DataBase::addLog(Logs* log) {
-    this->logs[log->getDate()->getMonthName()]->add(log);
+    this->logs[log->getDate()->getMonthNumber()]->add(log);
 }
 
 /**
@@ -68,20 +68,20 @@ void DataBase::readFile(std::string fileName) {
 /**
  * @brief 
  * 
- * @param month-string con el mes
+ * @param month-int con el mes
  * @return LogsVector* con los logs del mes
  */
-LogsVector* DataBase::at(std::string month) {
+LogsVector* DataBase::at(int month) {
     return this->logs.at(month);
 }
 
 /**
  * @brief Sobrecarga del operador [] para acceder a los LogsVector de acuerdo a su mes
  * 
- * @param month-string con el mes
+ * @param month-int con el número del mes
  * @return LogsVector* con los logs del mes
  */
-LogsVector* DataBase::operator[](std::string month) {
+LogsVector* DataBase::operator[](int month) {
     return this->at(month);
 }
 
@@ -98,4 +98,75 @@ std::ostream& operator<<(std::ostream& os, DataBase& db) {
         os << *log.second << std::endl;
     }
     return os;
+}
+
+/**
+ * @brief Método que busca los logs entre 2 fechas y los guarda en un objeto LogsVector
+ * 
+ * @param date1-Date* con la fecha inicial
+ * @param date2-Date* con la fecha final 
+ * @return LogsVector* 
+ */
+LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2){ // ! FALTA IMPLEMENTAR
+    //Verificar que date 1 sea menor que date 2
+    if (*date2 < date1){
+        Date* temp = date1;
+        date1 = date2;
+        date2 = temp;
+    }
+    LogsVector* logsInDates = new LogsVector();
+    if (date1->getMonthNumber() == date2->getMonthNumber()){ //Si los meses son iguales están en el mismo vector
+        int i = this->logs[date1->getMonthNumber()]->searchByDate(date1,true);
+        int j = this->logs[date2->getMonthNumber()]->searchByDate(date2,false);
+        
+        while (i != j){
+            logsInDates->add(this->logs[date1->getMonthNumber()]->at(i)); //Agrega hasta que alcance la posición j
+            i++;
+        }
+        return logsInDates;
+    } else { //Sino son del mismo mes,
+        int i = this->logs[date1->getMonthNumber()]->searchByDate(date1,true);
+        for (int k = i; k < this->logs[date1->getMonthNumber()]->getLogs().size(); k++){ //Agrega los logs restantes en el vector de date1
+            logsInDates->add(this->logs[date1->getMonthNumber()]->at(k));
+        }
+
+        bool foundMonth = false; 
+        for (auto& month : this->logs){
+            if (date1->getMonthNumber() == month.first){ // hasta encontrar el mes después de date1, se ejecuta el siguiente código:
+                foundMonth = true;
+                continue;
+            }
+            if (foundMonth){ //Ya hayamos descartados los otros meses en los que NO está el mes de date1
+                if (month.first == date2->getMonthNumber()){ //Verificamos que el mes de esta iteración sea igual al de date2
+                    int j = this->logs[date2->getMonthNumber()]->searchByDate(date2,false);
+                    for (int m = 0; m <= j; m++){
+                        logsInDates->add((month.second->getLogs().at(m))); //Agrega los logs hasta la posición j
+                    }
+                    return logsInDates;
+                    
+                } else { //Si aún el mes en esta iteración no es igual al mes del date2; agrega todo el vector de ese mes
+                    for (int m =0; m < month.second->getLogs().size(); m++){
+                        logsInDates->add(month.second->getLogs().at(m));
+                    }
+                }
+            }
+        }
+    }
+    return logsInDates;
+}
+
+void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName){
+    std::ofstream file;
+    file.open(fileName, std::ios::out);
+    if (file.fail()){
+        std::cout << "Error al abrir el archivo" << std::endl;
+        exit(1);
+    }
+    std::cout << "Escribiendo en el archivo..." << std::endl;
+    LogsVector* logsInDates = this->getLogsBetweenDates(date1,date2);
+    for (int i = 0; i < logsInDates->getLogs().size(); i++){
+        file << logsInDates->getLogs().at(i)->toString() << std::endl;
+    }
+    file.close();
+    std::cout << "Archivo escrito exitosamente" << std::endl;
 }

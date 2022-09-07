@@ -51,6 +51,15 @@ std::string Logs::getRequest() {
 }
 
 /**
+ * @brief Obtener un string con la información del objeto Logs
+ * 
+ * @return string con la información del objeto Logs
+ */
+std::string Logs::toString() {
+    return this->date->toString() + " " + this->ip + " " + this->request;
+}
+
+/**
  * @brief Sobrecarga del operador <<
  * 
  * @param os- ostream
