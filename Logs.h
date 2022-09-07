@@ -18,6 +18,7 @@ class Logs{
         Date* getDate();
         std::string getIp();
         std::string getRequest();
+        std::string toString();
         friend std::ostream& operator<<(std::ostream&, Logs&);
 };
 

@@ -14,19 +14,21 @@
  */
 class DataBase{
     private:
-        std::map<std::string, LogsVector* > logs;
+        std::map<int, LogsVector* > logs;
         
     public:
         DataBase();
         void readFile(std::string fileName);
         void addLog(Logs* log);
-        LogsVector* at(std::string month);
+        LogsVector* at(int month);
         
         //Sobrecarga de []
-        LogsVector* operator[](std::string month);
+        LogsVector* operator[](int month);
         friend std::ostream& operator<<(std::ostream& os, DataBase& db);
         //Buscar logs entre 2 fechas
-        LogsVector* seekByDate(std::string date1,std::string date2); // ! Falta implementar
+        LogsVector* getLogsBetweenDates(Date* date1,Date* date2); // ! Falta implementar
+        //Buscar logs entre 2 fechas y guardarlos en un archivo
+        void writeToFile(Date* date1,Date* date2,std::string fileName); // ! Falta implementar
 };
 
 #endif

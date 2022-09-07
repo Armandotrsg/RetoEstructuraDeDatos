@@ -19,6 +19,7 @@ class Date {
                                                   {"Jul", 7}, {"Aug", 8}, {"Sep", 9}, {"Oct", 10}, {"Nov", 11}, {"Dec", 12}};
     public:
         Date();
+        Date(std::string monthDay);
         Date(std::string month, std::string day, std::string hour, std::string minute, std::string second);
         int getDay();
         int getMonthNumber();
@@ -26,6 +27,7 @@ class Date {
         int getHour();
         int getMinute();
         int getSecond();
+        std::string toString();
         // Sobrecarga de operadores
         bool operator==(Date*);
         bool operator!=(Date*);

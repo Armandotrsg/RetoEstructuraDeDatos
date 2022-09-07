@@ -21,6 +21,8 @@ class LogsVector {
         void mergeSort();
         void bubbleSort();
         Logs* at(int i);
+        //Búsqueda
+        int searchByDate(Date* date,bool first); //Regresa la posición de la primera fecha que sea igual a la fecha dada
         //Sobrecarga de operadores
         Logs* operator[](int index);
         friend std::ostream& operator<<(std::ostream& os,LogsVector& logs);
