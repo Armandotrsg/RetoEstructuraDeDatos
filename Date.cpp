@@ -18,10 +18,49 @@ Date::Date() {
  * @param monthDay-string con el mes y el día: "Jan 1" o "Feb 22"
  */
 Date::Date(std::string monthDay) {
+    //Verificar que el string ingresado tenga el formato correcto
+    if (monthDay.length() < 5) {
+        throw std::invalid_argument("El formato del mes y día es incorrecto");
+    }
+    //Verificar que haya un espacio entre el mes y el día
+    if (monthDay[3] != ' ') {
+        throw std::invalid_argument("El formato del mes y día es incorrecto");
+    }
     std::string month = monthDay.substr(0, 3);
     std::string day = monthDay.substr(4, monthDay.length());
-    this->month = std::pair<std::string, int>{month, MONTHS.at(month)};
+    //Verificar que el mes sea válido
+    if (month == "Jan") {
+        this->month = std::pair<std::string, int>{"Jan", 1};
+    } else if (month == "Feb") {
+        this->month = std::pair<std::string, int>{"Feb", 2};
+    } else if (month == "Mar") {
+        this->month = std::pair<std::string, int>{"Mar", 3};
+    } else if (month == "Apr") {
+        this->month = std::pair<std::string, int>{"Apr", 4};
+    } else if (month == "May") {
+        this->month = std::pair<std::string, int>{"May", 5};
+    } else if (month == "Jun") {
+        this->month = std::pair<std::string, int>{"Jun", 6};
+    } else if (month == "Jul") {
+        this->month = std::pair<std::string, int>{"Jul", 7};
+    } else if (month == "Aug") {
+        this->month = std::pair<std::string, int>{"Aug", 8};
+    } else if (month == "Sep") {
+        this->month = std::pair<std::string, int>{"Sep", 9};
+    } else if (month == "Oct") {
+        this->month = std::pair<std::string, int>{"Oct", 10};
+    } else if (month == "Nov") {
+        this->month = std::pair<std::string, int>{"Nov", 11};
+    } else if (month == "Dec") {
+        this->month = std::pair<std::string, int>{"Dec", 12};
+    } else {
+        throw std::invalid_argument("El mes no es válido");
+    }
     this->day = std::stoi(day);
+    //Verificamos que el día sea válido
+    if (this->day < 1 || this->day > 31) {
+        throw std::invalid_argument("El día no es válido");
+    }
     this->hour = 0;
     this->minute = 0;
     this->second = 0;

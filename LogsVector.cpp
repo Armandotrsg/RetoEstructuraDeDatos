@@ -151,6 +151,10 @@ int LogsVector::searchByDate(Date* date,bool first){ // ! Corregir
     int inicio = 0;
     int fin = this->logs.size() -1;
     int centro;
+    //Verificar que el vector no esté vacío
+    if (this->logs.size() == 0) {
+        return -1;
+    }
     while (inicio <= fin) {
         centro = (inicio + fin) / 2;
         if (this->logs[centro]->getDate()->getDay() == date->getDay()) {

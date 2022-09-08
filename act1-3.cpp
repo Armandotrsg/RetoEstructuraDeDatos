@@ -18,14 +18,21 @@ int main() {
     std::cout << *db["Sep"] << std::endl; */
     DataBase* db = new DataBase();
     db->readFile("bitacora.txt");
-    std::cout << "Ingresa una fecha con mes y día: ";
+    std::cout << "Ingresa una fecha con mes y día (MMM DD): ";
     std::string date1;
     getline(std::cin, date1);
-    std::cout << "Ingresa otra fecha con mes y día: ";
+    std::cout << "Ingresa otra fecha con mes y día (MMM DD): ";
     std::string date2;
     getline(std::cin, date2);
     //Write to file
-    db->writeToFile(new Date(date1), new Date(date2), "bitacoraOrdenada1-3.txt");
+    try{
+        Date* d1 = new Date(date1);
+        Date* d2 = new Date(date2);
+        db->writeToFile(d1, d2, "bitacoraOrdenada1-3.txt");
+    } catch (std::exception& error) {
+        std::cerr << error.what() << std::endl;
+    }
+    
 
     
     
