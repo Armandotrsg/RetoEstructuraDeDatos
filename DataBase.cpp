@@ -177,8 +177,7 @@ void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName) {
     std::ofstream file;
     file.open(fileName, std::ios::out);
     if (file.fail()) {
-        std::cout << "Error al abrir el archivo" << std::endl;
-        exit(1);
+        throw std::runtime_error("Error al abrir el archivo");
     }
     LogsVector* logsInDates = this->getLogsBetweenDates(date1, date2);
     if (logsInDates == nullptr) {  // Verifica que no tenga un nullptr

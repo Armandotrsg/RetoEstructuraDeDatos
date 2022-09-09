@@ -27,7 +27,7 @@ int main() {
     try {
         Date* d1 = new Date(date1);
         Date* d2 = new Date(date2);
-        db->writeToFile(d1, d2, "bitacoraOrdenada1-3.txt");
+        db->writeToFile(d1, d2, "bitacoraOrdenada1.3-eq7.txt");
     } catch (std::exception& error) {
         std::cerr << error.what() << std::endl;
     }
