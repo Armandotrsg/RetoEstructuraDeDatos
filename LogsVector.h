@@ -19,7 +19,6 @@ class LogsVector {
         std::vector<Logs*> getLogs();
         void add(Logs* log);
         void mergeSort();
-        void bubbleSort();
         Logs* at(int i);
         //Búsqueda
         int searchByDate(Date* date,bool first); //Regresa la posición de la primera fecha que sea igual a la fecha dada

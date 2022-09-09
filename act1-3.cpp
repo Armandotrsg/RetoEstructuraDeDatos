@@ -7,13 +7,13 @@
  *       para ver los logs que ocurrieron entre esas fechas y los guarda en un archivo de texto.
  * @version 0.1
  * @date 2022-09-04
- *
  */
+
 #include "DataBase.h"
 
 int main() {
     DataBase* db = new DataBase();
-    db->readFile("bitacora.txt");
+    db->readFile("bitacora.txt"); // Lee el archivo de bitacora.txt
 
     // Preguntar al usuario las fechas para buscar los logs
     std::cout << "Ingresa una fecha con mes y día (Mmm DD): ";
@@ -22,6 +22,7 @@ int main() {
     std::cout << "Ingresa otra fecha con mes y día (Mmm DD): ";
     std::string date2;
     getline(std::cin, date2);
+
     // Escribir en un archivo
     try {
         Date* d1 = new Date(date1);
@@ -33,3 +34,10 @@ int main() {
 
     return 0;
 }
+
+/*
+Referencias:
+
+González, L. H., Salinas, E. G., & Cueva, V. M. (2020). Estructura de Datos y
+Algoritmos Fundamentales (1.a ed.). Editorial Digital Tecnológico de Monterrey.
+*/

@@ -126,11 +126,11 @@ LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2) {
     LogsVector* logsInDates = new LogsVector();
     int i = this->logs[date1->getMonthNumber()]->searchByDate(date1, true);   // Busca el primer log que cumpla con la fecha inicial
     int j = this->logs[date2->getMonthNumber()]->searchByDate(date2, false);  // Busca el último log que cumpla con la fecha final
-    //Verificamos que ninguno de los índices sea -1
+    // Verificamos que ninguno de los índices sea -1
     if (i == -1 || j == -1) {
         return nullptr;
     }
-    if (date1->getMonthNumber() == date2->getMonthNumber()) {                 // Si los meses son iguales están en el mismo vector
+    if (date1->getMonthNumber() == date2->getMonthNumber()) {  // Si los meses son iguales están en el mismo vector
         while (i != j) {
             logsInDates->add(this->logs[date1->getMonthNumber()]->at(i));  // Agrega hasta que alcance la posición j
             i++;
@@ -181,7 +181,7 @@ void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName) {
         exit(1);
     }
     LogsVector* logsInDates = this->getLogsBetweenDates(date1, date2);
-    if (logsInDates == nullptr) { //Verifica que no tenga un nullptr
+    if (logsInDates == nullptr) {  // Verifica que no tenga un nullptr
         throw std::invalid_argument("No hay logs entre las fechas ingresadas");
     } else {
         std::cout << "Escribiendo en el archivo..." << std::endl;
@@ -191,5 +191,4 @@ void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName) {
         file.close();
         std::cout << "Archivo escrito exitosamente" << std::endl;
     }
-    
 }

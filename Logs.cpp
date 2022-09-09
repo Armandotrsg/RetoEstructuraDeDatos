@@ -2,7 +2,7 @@
 
 /**
  * @brief Constructor default de la clase Logs
- * 
+ *
  */
 Logs::Logs() {
     this->date = new Date();
@@ -12,7 +12,7 @@ Logs::Logs() {
 
 /**
  * @brief Constructor de la clase Logs
- * 
+ *
  * @param date- apuntador de un objeto Date
  * @param ip- string con el ip
  * @param request- string con el request
@@ -25,7 +25,7 @@ Logs::Logs(Date* date, std::string ip, std::string request) {
 
 /**
  * @brief Obtener el objeto Date
- * 
+ *
  * @return Date* con el objeto Date
  */
 Date* Logs::getDate() {
@@ -34,7 +34,7 @@ Date* Logs::getDate() {
 
 /**
  * @brief Obtener el ip
- * 
+ *
  * @return string con el ip
  */
 std::string Logs::getIp() {
@@ -43,7 +43,7 @@ std::string Logs::getIp() {
 
 /**
  * @brief Obtener el request
- * 
+ *
  * @return string con el request
  */
 std::string Logs::getRequest() {
@@ -52,7 +52,7 @@ std::string Logs::getRequest() {
 
 /**
  * @brief Obtener un string con la información del objeto Logs
- * 
+ *
  * @return string con la información del objeto Logs
  */
 std::string Logs::toString() {
@@ -61,10 +61,10 @@ std::string Logs::toString() {
 
 /**
  * @brief Sobrecarga del operador <<
- * 
+ *
  * @param os- ostream
  * @param log- objeto Logs
- * @return ostream& 
+ * @return ostream&
  */
 std::ostream& operator<<(std::ostream& os, Logs& logs) {
     os << *logs.date << " " << logs.ip << " " << logs.request;
