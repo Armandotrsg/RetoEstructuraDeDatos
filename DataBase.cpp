@@ -182,7 +182,7 @@ void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName) {
     }
     LogsVector* logsInDates = this->getLogsBetweenDates(date1, date2);
     if (logsInDates == nullptr) { //Verifica que no tenga un nullptr
-        std::cout << "No se encontraron logs en las fechas dadas" << std::endl;
+        throw std::invalid_argument("No hay logs entre las fechas ingresadas");
     } else {
         std::cout << "Escribiendo en el archivo..." << std::endl;
         for (int i = 0; i < logsInDates->getLogs().size(); i++) {

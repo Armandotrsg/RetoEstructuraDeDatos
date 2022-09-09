@@ -56,7 +56,12 @@ Date::Date(std::string monthDay) {
     } else {
         throw std::invalid_argument("El mes no es válido");
     }
-    this->day = std::stoi(day);
+    //Verificar que el día sea válido
+    try {
+        this->day = std::stoi(day);
+    } catch (std::invalid_argument& e) {
+        throw std::invalid_argument("El día no es válido");
+    }
     //Verificamos que el día sea válido
     if (this->day < 1 || this->day > 31) {
         throw std::invalid_argument("El día no es válido");
