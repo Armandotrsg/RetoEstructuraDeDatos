@@ -6,7 +6,7 @@
  * @brief Programa que parsea un archivo de logs y los ordena por mes y día. El usuario puede elegir 2 fechas
  *       para ver los logs que ocurrieron entre esas fechas y los guarda en un archivo de texto.
  * @version 0.1
- * @date 2022-09-04
+ * @date 2022-09-09
  */
 
 #include "DataBase.h"
