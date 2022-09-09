@@ -1,9 +1,6 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "Logs.h"
-#include <vector>
-#include <map>
 #include <fstream>
 #include "LogsVector.h"
 
