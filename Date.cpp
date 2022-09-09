@@ -1,5 +1,9 @@
 #include "Date.h"
 
+//Variable global para el mapa de meses
+const std::map<std::string, int> MONTHS = {{"Jan", 1}, {"Feb", 2}, {"Mar", 3}, {"Apr", 4},  {"May", 5},  {"Jun", 6},
+                                           {"Jul", 7}, {"Aug", 8}, {"Sep", 9}, {"Oct", 10}, {"Nov", 11}, {"Dec", 12}};
+
 /**
  * @brief Constructor default de la clase Date
  *
@@ -82,7 +86,7 @@ Date::Date(std::string monthDay) {
  */
 Date::Date(std::string month, std::string day, std::string hour, std::string minute, std::string second) {
     this->month.first = month;
-    this->month.second = this->MONTHS.at(month);
+    this->month.second = MONTHS.at(month);
     this->day = std::stoi(day);
     this->hour = std::stoi(hour);
     this->minute = std::stoi(minute);
