@@ -51,18 +51,11 @@ void DataBase::readFile(std::string fileName) {
         std::cout << "Error al abrir el archivo" << std::endl;
         exit(1);
     }
-
-    while (!file.eof()) {
-        getline(file, line);
-        month = line.substr(0, 3);
-        int space = line.find(" ", 4);  // Used to find the first space in the line, given that days are either 1 or 2 digits
-        day = line.substr(4, space);
-        int space2 = line.find(" ", space + 1);  // Used to find the second space in the line.
-        time = line.substr(space + 1, space2);
-        int space3 = line.find(" ", space2 + 1);  // Used to find the third space in the line.
-        ip = line.substr(space2 + 1, space3);
-        request = line.substr(space3 + 1, line.length());  // Used to find the rest of the line.
+    
+    while (file >> month >> day >> time >> ip) {
+        getline(file, request);
         Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 5), time.substr(6, 7));
+        request = request.substr(1, request.length()); // Remove the first space in the request
         Logs* log = new Logs(date, ip, request);
         this->addLog(log);
     }
