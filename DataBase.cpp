@@ -83,6 +83,22 @@ void DataBase::readFile(std::string fileName) {
     for (auto &month : this->logsByDate) {
         month.second->bubbleSortDate();
     }
+    //Escribir en un archivo los logs ordenados por ip
+    std::cout << "Escribiendo archivo..." << std::endl;
+    std::ofstream fileIp;
+    fileIp.open("bitacoraOrdenadaIP-Eq7.txt", std::ios::out);
+    if (fileIp.fail()) {
+        std::cout << "Error al abrir el archivo" << std::endl;
+        exit(1);
+    }
+    for (int i = 0; i < 10; i++) {
+        Logs* temp = this->logsByIp[i]->at(0);
+        while (temp != nullptr) {
+            fileIp << temp->toString() << std::endl;
+            temp = temp->next;
+        }
+    }
+
 }
 
 /**
