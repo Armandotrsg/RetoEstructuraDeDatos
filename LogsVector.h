@@ -2,7 +2,7 @@
 #define LOGSVECTOR_H
 
 #include "Logs.h"
-#include <vector>
+
 
 /**
  * @brief Clase que representa un vector de Logs
@@ -11,17 +11,21 @@
  */
 class LogsVector {
     private:
-        std::vector<Logs*> logs;
-        void mergeSort(int, int);
-        void merge(int,int);
+        Logs* first;
+        
+        int size;
+        void swap(Logs*, Logs*);
     public:
+        Logs* last;
         LogsVector();
-        std::vector<Logs*> getLogs();
-        void add(Logs* log);
-        void mergeSort();
+        int getSize();
+        void push_back(Logs* log);
         Logs* at(int i);
+        void bubbleSortIp();
+        void bubbleSortDate();
         //Búsqueda
-        int searchByDate(Date* date,bool first); //Regresa la posición de la primera fecha que sea igual a la fecha dada
+        int searchByDate(Date* date); //Regresa la posición de la primera fecha que sea igual a la fecha dada
+        int searchByIp(std::string ip); //Regresa la posición del primer ip que sea igual al ip dado
         //Sobrecarga de operadores
         Logs* operator[](int index);
         friend std::ostream& operator<<(std::ostream& os,LogsVector& logs);

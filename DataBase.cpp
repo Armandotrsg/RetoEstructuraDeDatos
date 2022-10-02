@@ -5,8 +5,7 @@
  *
  */
 DataBase::DataBase() {
-    this->logs = std::map<int, LogsVector*>{
-        //? Así se declaran vectores vacíos
+    this->logsByDate = std::map<int, LogsVector*>{
         {1, new LogsVector()},
         {2, new LogsVector()},
         {3, new LogsVector()},
@@ -19,6 +18,9 @@ DataBase::DataBase() {
         {10, new LogsVector()},
         {11, new LogsVector()},
         {12, new LogsVector()}};
+    for (int i = 0; i < 10; i++) {
+        this->logsByIp[i] = new LogsVector();
+    }
 }
 
 /**
@@ -26,8 +28,17 @@ DataBase::DataBase() {
  *
  * @param logs- Log* con los logs
  */
-void DataBase::addLog(Logs* log) {
-    this->logs[log->getDate()->getMonthNumber()]->add(log);
+void DataBase::addLogByDate(Logs* log) {
+    this->logsByDate[log->getDate()->getMonthNumber()]->push_back(log);
+}
+
+/**
+ * @brief Agrega un objeto Logs al objeto LogsVector de acuerdo a su primer dígito en el arreglo
+ *
+ * @param logs- Log* con los logs
+ */
+void DataBase::addLogByIp(Logs* log) {
+    this->logsByIp[log->getIp()->getFirstDigit()]->push_back(log);
 }
 
 /**
@@ -51,18 +62,26 @@ void DataBase::readFile(std::string fileName) {
         std::cout << "Error al abrir el archivo" << std::endl;
         exit(1);
     }
-    
+    std::cout << "Leyendo archivo..." << std::endl;
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
         Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 5), time.substr(6, 7));
-        request = request.substr(1, request.length()); // Remove the first space in the request
-        Logs* log = new Logs(date, ip, request);
-        this->addLog(log);
+        //Remove first space
+        request = request.substr(1, request.length());
+        Logs* logDate = new Logs(date, ip, request);
+        Logs* logIp = new Logs(date, ip, request);
+        this->addLogByDate(logDate);
+        this->addLogByIp(logIp);
     }
     file.close();
+    std::cout << "Archivo leido" << std::endl;
     // Sort the logs
-    for (auto& log : this->logs) {
-        log.second->mergeSort();
+    std::cout << "Ordenando..." << std::endl;
+    for (int i = 0; i < 10; i++) {
+        this->logsByIp[i]->bubbleSortIp();
+    }
+    for (auto &month : this->logsByDate) {
+        month.second->bubbleSortDate();
     }
 }
 
@@ -72,115 +91,56 @@ void DataBase::readFile(std::string fileName) {
  * @param month-int con el mes
  * @return LogsVector* con los logs del mes
  */
-LogsVector* DataBase::at(int month) {
-    return this->logs.at(month);
+LogsVector* DataBase::atMonth(std::string month) {
+    if (month == "Jan") {
+        return this->logsByDate[1];
+    } else if (month == "Feb") {
+        return this->logsByDate[2];
+    } else if (month == "Mar") {
+        return this->logsByDate[3];
+    } else if (month == "Apr") {
+        return this->logsByDate[4];
+    } else if (month == "May") {
+        return this->logsByDate[5];
+    } else if (month == "Jun") {
+        return this->logsByDate[6];
+    } else if (month == "Jul") {
+        return this->logsByDate[7];
+    } else if (month == "Aug") {
+        return this->logsByDate[8];
+    } else if (month == "Sep") {
+        return this->logsByDate[9];
+    } else if (month == "Oct") {
+        return this->logsByDate[10];
+    } else if (month == "Nov") {
+        return this->logsByDate[11];
+    } else if (month == "Dec") {
+        return this->logsByDate[12];
+    } else {
+        return nullptr;
+    }
 }
 
 /**
- * @brief Sobrecarga del operador [] para acceder a los LogsVector de acuerdo a su mes
+ * @brief
  *
- * @param month-int con el número del mes
- * @return LogsVector* con los logs del mes
+ * @param firstDigit-int con el primer dígito de la ip
+ * @return LogsVector* con los logs del primer dígito de la ip
  */
-LogsVector* DataBase::operator[](int month) {
-    return this->at(month);
+LogsVector* DataBase::atIp(int firstDigit) {
+    return this->logsByIp[firstDigit];
 }
 
 /**
- * @brief Método que imprime los logs de acuerdo a su mes
+ * @brief Método que imprime los logs de acuerdo a su ip
  *
  * @param os- ostream
  * @param db- objeto DataBase
  * @return ostream&
  */
 std::ostream& operator<<(std::ostream& os, DataBase& db) {
-    for (auto& log : db.logs) {
-        os << log.first << std::endl;
-        os << *log.second << std::endl;
+    for (auto& log : db.logsByIp) {
+        os << *log << std::endl;
     }
     return os;
-}
-
-/**
- * @brief Método que busca los logs entre 2 fechas y los guarda en un objeto LogsVector
- *
- * @param date1-Date* con la fecha inicial
- * @param date2-Date* con la fecha final
- * @return LogsVector*
- * @complejidad O(n)
- */
-LogsVector* DataBase::getLogsBetweenDates(Date* date1, Date* date2) {
-    // Verificar que date 1 sea menor que date 2
-    if (*date2 < date1) {
-        Date* temp = date1;
-        date1 = date2;
-        date2 = temp;
-    }
-    LogsVector* logsInDates = new LogsVector();
-    int i = this->logs[date1->getMonthNumber()]->searchByDate(date1, true);   // Busca el primer log que cumpla con la fecha inicial
-    int j = this->logs[date2->getMonthNumber()]->searchByDate(date2, false);  // Busca el último log que cumpla con la fecha final
-    // Verificamos que ninguno de los índices sea -1
-    if (i == -1 || j == -1) {
-        return nullptr;
-    }
-    if (date1->getMonthNumber() == date2->getMonthNumber()) {  // Si los meses son iguales están en el mismo vector
-        while (i != j) {
-            logsInDates->add(this->logs[date1->getMonthNumber()]->at(i));  // Agrega hasta que alcance la posición j
-            i++;
-        }
-        return logsInDates;
-    } else {                                                                               // Sino son del mismo mes,
-        for (int k = i; k < this->logs[date1->getMonthNumber()]->getLogs().size(); k++) {  // Agrega los logs restantes en el vector de date1
-            logsInDates->add(this->logs[date1->getMonthNumber()]->at(k));
-        }
-
-        bool foundMonth = false;
-        for (auto& month : this->logs) {
-            if (date1->getMonthNumber() == month.first) {  // hasta encontrar el mes después de date1, se ejecuta el siguiente código:
-                foundMonth = true;
-                continue;
-            }
-            if (foundMonth) {                                  // Ya hayamos descartados los otros meses en los que NO está el mes de date1
-                if (month.first == date2->getMonthNumber()) {  // Verificamos que el mes de esta iteración sea igual al de date2
-
-                    for (int m = 0; m <= j; m++) {
-                        logsInDates->add((month.second->getLogs().at(m)));  // Agrega los logs hasta la posición j
-                    }
-                    return logsInDates;
-
-                } else {  // Si aún el mes en esta iteración no es igual al mes del date2; agrega todo el vector de ese mes
-                    for (int m = 0; m < month.second->getLogs().size(); m++) {
-                        logsInDates->add(month.second->getLogs().at(m));
-                    }
-                }
-            }
-        }
-    }
-    return logsInDates;
-}
-
-/**
- * @brief Método que busca los logs entre 2 fechas y los escribe en un archivo
- *
- * @param date1-Date* con la fecha inicial
- * @param date2-Date* con la fecha final
- * @param fileName-string con el nombre del archivo
- */
-void DataBase::writeToFile(Date* date1, Date* date2, std::string fileName) {
-    std::ofstream file;
-    file.open(fileName, std::ios::out);
-    if (file.fail()) {
-        throw std::runtime_error("Error al abrir el archivo");
-    }
-    LogsVector* logsInDates = this->getLogsBetweenDates(date1, date2);
-    if (logsInDates == nullptr) {  // Verifica que no tenga un nullptr
-        throw std::invalid_argument("No hay logs entre las fechas ingresadas");
-    } else {
-        std::cout << "Escribiendo en el archivo..." << std::endl;
-        for (int i = 0; i < logsInDates->getLogs().size(); i++) {
-            file << logsInDates->getLogs().at(i)->toString() << std::endl;
-        }
-        file.close();
-        std::cout << "Archivo escrito exitosamente" << std::endl;
-    }
 }

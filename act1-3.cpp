@@ -14,8 +14,13 @@
 int main() {
     DataBase* db = new DataBase();
     db->readFile("bitacora.txt"); // Lee el archivo de bitacora.txt
+    //Imprime el tamaño de los LogsVector por ip
+    for (int i = 0; i < 10; i++) {
+        std::cout << "LogsVector " << i << ": " << db->atIp(i)->getSize() << std::endl;
+    }
+    
 
-    // Preguntar al usuario las fechas para buscar los logs
+    /* // Preguntar al usuario las fechas para buscar los logs
     std::cout << "Ingresa una fecha con mes y día (Mmm DD): ";
     std::string date1;
     getline(std::cin, date1);
@@ -30,7 +35,7 @@ int main() {
         db->writeToFile(d1, d2, "bitacoraOrdenada1.3-eq7.txt");
     } catch (std::exception& error) {
         std::cerr << error.what() << std::endl;
-    }
+    } */
 
     return 0;
 }

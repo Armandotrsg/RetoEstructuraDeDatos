@@ -5,7 +5,18 @@
  *
  */
 LogsVector::LogsVector() {
-    this->logs = std::vector<Logs*>();
+    this->first = nullptr;
+    this->last = nullptr;
+    this->size = 0;
+}
+
+/**
+ * @brief Método que regresa el tamaño del vector
+ *
+ * @return int
+ */
+int LogsVector::getSize() {
+    return this->size;
 }
 
 /**
@@ -13,17 +24,15 @@ LogsVector::LogsVector() {
  *
  * @param logs- vector de apuntadores a Logs
  */
-void LogsVector::add(Logs* log) {
-    this->logs.push_back(log);
-}
-
-/**
- * @brief Obtener el vector de Logs
- *
- * @return vector<Logs*> con el vector de Logs
- */
-std::vector<Logs*> LogsVector::getLogs() {
-    return this->logs;
+void LogsVector::push_back(Logs* log) {
+    if (this->first == nullptr) {
+        this->first = log;
+        this->last = log;
+    } else {
+        this->last->next = log;
+        this->last = log;
+    }
+    this->size++;
 }
 
 /**
@@ -33,7 +42,11 @@ std::vector<Logs*> LogsVector::getLogs() {
  * @return Logs* con el objeto Logs
  */
 Logs* LogsVector::at(int i) {
-    return this->logs.at(i);
+    Logs* temp = this->first;
+    for (int j = 0; j < i; j++) {
+        temp = temp->next;
+    }
+    return temp;
 }
 
 /**
@@ -42,7 +55,7 @@ Logs* LogsVector::at(int i) {
  * @return Logs* con el objeto Logs
  */
 Logs* LogsVector::operator[](int i) {
-    return this->logs.at(i);
+    return this->at(i);
 }
 
 /**
@@ -53,107 +66,114 @@ Logs* LogsVector::operator[](int i) {
  * @return ostream&
  */
 std::ostream& operator<<(std::ostream& os, LogsVector& logs) {
-    for (auto& log : logs.logs) {
-        os << *log << std::endl;
+    Logs* temp = logs.first;
+    while (temp != nullptr) {
+        os << temp->toString() << std::endl;
+        temp = temp->next;
     }
     return os;
 }
 
-/**
- * @brief Junta 2 sublistas ordenadas
- *
- * @param inicio-int índice del inicio de la primera sublista
- * @param fin- int índice del final de la segunda sublista
- *
- * @pre inicio < fin
- * @pre las sublistas están ordenadas
- */
-void LogsVector::merge(int inicio, int fin) {
-    int centro = (inicio + fin) / 2;
-    int j = inicio, k = centro + 1, size = fin - inicio + 1;
-    Logs* datosTmp[size];  // Arreglo de datos temporales
+void LogsVector::swap(Logs* a, Logs* b) {
+    Date* tempDate = a->date;
+    Ip* tempIp = a->ip;
+    std::string tempRequest = a->request;
+    a->date = b->date;
+    a->ip = b->ip;
+    a->request = b->request;
+    b->date = tempDate;
+    b->ip = tempIp;
+    b->request = tempRequest;
+}
 
-    for (int i = 0; i < size; i++) {
-        if (j <= centro && k <= fin) {
-            if (*this->logs[j]->getDate() < this->logs[k]->getDate()) {
-                datosTmp[i] = this->logs[j++];
-            } else {
-                datosTmp[i] = this->logs[k++];
+/**
+ * @brief Ordenar el vector de Logs con el algoritmo de burbuja
+ * @complexity O(n^2)
+ */
+void LogsVector::bubbleSortIp() {
+    bool bandera;
+    Logs* actual = nullptr;
+    for (int i = 1; i < this->size; i++) {
+        bandera = false;
+        actual = this->first;
+        for (int j = 0; j < this->size - i; j++) {
+            if (*(actual->getIp()) > actual->next->getIp()) {
+                this->swap(actual, actual->next);
+                bandera = true;
             }
-        } else if (j <= centro) {
-            datosTmp[i] = this->logs[j++];
-        } else {
-            datosTmp[i] = this->logs[k++];
+            actual = actual->next;
+        }
+        if (!bandera) {
+            break;
         }
     }
+}
 
-    for (int m = 0; m < size; m++) {
-        this->logs[inicio + m] = datosTmp[m];
+/**
+ * @brief Ordenar la lista de Logs con el algoritmo de bubble
+ * @complexity O(n^2)
+ */
+void LogsVector::bubbleSortDate() {
+    bool bandera;
+    Logs* actual = nullptr;
+    for (int i = 1; i < this->size; i++) {
+        bandera = false;
+        actual = this->first;
+        for (int j = 0; j < this->size - i; j++) {
+            if (*(actual->date) > actual->next->date) {
+                this->swap(actual, actual->next);
+                bandera = true;
+            }
+            actual = actual->next;
+        }
+        if (!bandera) {
+            break;
+        }
     }
 }
+
 // * (González et al., 2020)
 
 /**
- * @brief Función que manda a llamar en orden a la función mergeSort con parámetros
- *
- */
-void LogsVector::mergeSort() {
-    mergeSort(0, this->logs.size() - 1);
-}
-
-/**
- * @brief Ordena el vector de Logs
- *
- * @param left- int índice del inicio de la sublista
- * @param inicio- int índice del final de la sublista
- * @complejidad O(n log n)
- */
-void LogsVector::mergeSort(int left, int right) {
-    int centro;
-    if (left < right) {
-        centro = (left + right) / 2;
-        mergeSort(left, centro);
-        mergeSort(centro + 1, right);
-        merge(left, right);
-    }
-}
-
-/**
- * @brief Regresa la primera posición en la que haga match con la primera fecha
- *
+ * @brief Buscar un objeto Logs por su fecha
+ * 
  * @param date-Date* con la fecha a buscar
- * @param first-bool si quieres regresar la primera posición o la última
- * @return int con la posición del match
- * @complejidad O(log n)
+ * @return int con la posición del objeto Logs
  */
-int LogsVector::searchByDate(Date* date, bool first) {
-    int inicio = 0;
-    int fin = this->logs.size() - 1;
-    int centro;
-    // Verificar que el vector no esté vacío
-    if (this->logs.size() == 0) {
-        return -1;
-    }
-    while (inicio <= fin) {
-        centro = (inicio + fin) / 2;
-        if (this->logs[centro]->getDate()->getDay() == date->getDay()) {
-            break;
-        } else if (this->logs[centro]->getDate()->getDay() < date->getDay()) {
-            inicio = centro + 1;
-        } else {
-            fin = centro - 1;
+int LogsVector::searchByDate(Date* date) {
+    int pos = -1;
+    Logs* temp = this->first;
+    for (int i = 0; i < this->size; i++) {
+        if (*(temp->date) == date) {
+            return pos = i;
+        } else if (*(temp->date) > date) {
+            return pos = i-1;
         }
+        temp = temp->next;
     }
-    // * (González et al., 2020)
-    if (first) {  // Regresar la primera posición en la que se encuentre la fecha
-        while (centro > 0 && this->logs[centro - 1]->getDate()->getDay() == date->getDay()) {
-            centro--;
-        }
-    } else {  // Regresar la última posición en la que se encuentre la fecha
-        while (centro < this->logs.size() - 1 && this->logs[centro + 1]->getDate()->getDay() == date->getDay()) {
-            centro++;
-        }
-    }
+    return pos = this->size -1;
+}
 
-    return centro;
+// * (González et al., 2020)
+
+/**
+ * @brief Buscar un objeto Logs por su ip
+ * 
+ * @param ip-Ip* con la ip a buscar
+ * @return int con la posición del objeto Logs
+ */
+int LogsVector::searchByIp(std::string ip) {
+    int pos = 0;
+    Logs* temp = this->first;
+    Ip *ip1 = new Ip(ip);
+    while (temp != nullptr) {
+        if (*temp->ip == ip1) {
+            return pos;
+        } else if (*temp->ip > ip1) {
+            return pos - 1;
+        }
+        temp = temp->next;
+        pos++;
+    }
+    return pos = this->size - 1;
 }

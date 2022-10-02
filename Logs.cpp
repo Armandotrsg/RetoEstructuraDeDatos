@@ -6,8 +6,9 @@
  */
 Logs::Logs() {
     this->date = new Date();
-    this->ip = "";
+    this->ip = new Ip();
     this->request = "";
+    this->next = nullptr;
 };
 
 /**
@@ -19,8 +20,9 @@ Logs::Logs() {
  */
 Logs::Logs(Date* date, std::string ip, std::string request) {
     this->date = date;
-    this->ip = ip;
+    this->ip = new Ip(ip);
     this->request = request;
+    this->next = nullptr;
 }
 
 /**
@@ -37,7 +39,7 @@ Date* Logs::getDate() {
  *
  * @return string con el ip
  */
-std::string Logs::getIp() {
+Ip* Logs::getIp() {
     return this->ip;
 }
 
@@ -56,7 +58,7 @@ std::string Logs::getRequest() {
  * @return string con la información del objeto Logs
  */
 std::string Logs::toString() {
-    return this->date->toString() + " " + this->ip + " " + this->request;
+    return this->date->toString() + " " + this->ip->toString() + " " + this->request;
 }
 
 /**
@@ -67,6 +69,6 @@ std::string Logs::toString() {
  * @return ostream&
  */
 std::ostream& operator<<(std::ostream& os, Logs& logs) {
-    os << *logs.date << " " << logs.ip << " " << logs.request;
+    os << *logs.date << " " << *logs.ip << " " << logs.request;
     return os;
 }
