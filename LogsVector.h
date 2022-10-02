@@ -12,11 +12,10 @@
 class LogsVector {
     private:
         Logs* first;
-        
+        Logs* last;
         int size;
         void swap(Logs*, Logs*);
     public:
-        Logs* last;
         LogsVector();
         int getSize();
         void push_back(Logs* log);
