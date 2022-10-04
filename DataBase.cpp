@@ -21,6 +21,7 @@ DataBase::DataBase() {
     for (int i = 0; i < 10; i++) {
         this->logsByIp[i] = new LogsVector();
     }
+    this->currentFile = 1;
 }
 
 /**
@@ -39,6 +40,80 @@ void DataBase::addLogByDate(Logs* log) {
  */
 void DataBase::addLogByIp(Logs* log) {
     this->logsByIp[log->getIp()->getFirstDigit()]->push_back(log);
+}
+
+LogsVector* DataBase::getLogsBetweenIps(Ip* ip1, Ip* ip2) {
+    if (*ip1 > ip2) {
+        Ip* temp = ip1;
+        ip1 = ip2;
+        ip2 = temp;
+    }
+
+    // Verificar que ip1 tenga el formato correcto
+    if (ip1->getFirstDigit() < 0) {
+        ip1 = this->logsByIp[0]->getFirst()->getIp();
+    } else if (ip1->getFirstDigit() > 9) {
+        ip1 = this->logsByIp[9]->getLast()->getIp();
+    }
+
+    // Verificar que ip2 tenga el formato correcto
+    if (ip2->getFirstDigit() < 0) {
+        ip2 = this->logsByIp[0]->getFirst()->getIp();
+    } else if (ip2->getFirstDigit() > 9) {
+        ip2 = this->logsByIp[9]->getLast()->getIp();
+    }
+
+    LogsVector* logsBetween = new LogsVector();
+    if (ip1->getFirstDigit() == ip2->getFirstDigit()) {
+        Logs* temp = this->logsByIp[ip1->getFirstDigit()]->getFirst();
+        for (int i = 0; i < this->logsByIp[ip1->getFirstDigit()]->getSize(); i++) {
+            if (temp->next == nullptr) {
+                logsBetween->push_back(temp);
+                break;
+            } else {
+                if (*temp->ip >= ip1 && *temp->next->ip < ip2) {
+                    logsBetween->push_back(temp);
+                }
+                if (*temp->next->ip > ip2) {
+                    return logsBetween;
+                }
+                temp = temp->next;
+            }
+        }
+    } else {
+        Logs* temp = this->logsByIp[ip1->getFirstDigit()]->getFirst();
+        for (int i = 0; i < this->logsByIp[ip1->getFirstDigit()]->getSize(); i++) {  // Agregar los logs que faltan en el vector donde se encuentra ip1
+            if (temp->next == nullptr) {
+                Logs* temp2 = new Logs(temp->getDate(), temp->getIp()->toString(), temp->getRequest());
+                logsBetween->push_back(temp2);
+                break;
+            } else {
+                if (*temp->ip >= ip1 && temp->next->next != nullptr) {
+                    logsBetween->push_back(temp);
+                }
+                if (temp->next->next == nullptr) {
+                    // Crear copia del último valor de la lista
+                    Logs* temp2 = new Logs(temp->next->getDate(), temp->next->getIp()->toString(), temp->next->getRequest());
+                    logsBetween->push_back(temp2);
+                    break;
+                }
+            }
+            temp = temp->next;
+        }
+        for (int j = ip1->getFirstDigit() + 1; j <= ip2->getFirstDigit(); j++) {  // Agregar los logs que faltan en todos los vectores hasta el vector donde se encuentra ip2
+            Logs* temp2 = this->logsByIp[j]->getFirst();
+            for (int k = 0; k < this->logsByIp[j]->getSize(); k++) {
+                if (*temp2->ip < ip2) {
+                    logsBetween->push_back(temp2);
+                } else if (*temp2->ip > ip2) {
+                    return logsBetween;
+                }
+                temp2 = temp2->next;
+            }
+        }
+        return logsBetween;
+    }
+    return logsBetween;
 }
 
 /**
@@ -66,7 +141,7 @@ void DataBase::readFile(std::string fileName) {
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
         Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 5), time.substr(6, 7));
-        //Remove first space
+        // Remove first space
         request = request.substr(1, request.length());
         Logs* logDate = new Logs(date, ip, request);
         Logs* logIp = new Logs(date, ip, request);
@@ -80,10 +155,10 @@ void DataBase::readFile(std::string fileName) {
     for (int i = 0; i < 10; i++) {
         this->logsByIp[i]->bubbleSortIp();
     }
-    for (auto &month : this->logsByDate) {
+    for (auto& month : this->logsByDate) {
         month.second->bubbleSortDate();
     }
-    //Escribir en un archivo los logs ordenados por ip
+    // Escribir en un archivo los logs ordenados por ip
     std::cout << "Escribiendo archivo..." << std::endl;
     std::ofstream fileIp;
     fileIp.open("bitacoraOrdenadaIP-Eq7.txt", std::ios::out);
@@ -92,13 +167,12 @@ void DataBase::readFile(std::string fileName) {
         exit(1);
     }
     for (int i = 0; i < 10; i++) {
-        Logs* temp = this->logsByIp[i]->at(0);
+        Logs* temp = this->logsByIp[i]->getFirst();
         while (temp != nullptr) {
             fileIp << temp->toString() << std::endl;
             temp = temp->next;
         }
     }
-
 }
 
 /**
@@ -159,4 +233,22 @@ std::ostream& operator<<(std::ostream& os, DataBase& db) {
         os << *log << std::endl;
     }
     return os;
+}
+
+void DataBase::writeToFile(Ip* ip1, Ip* ip2) {
+    std::ofstream file;
+    std::string fileName = "salida" + std::to_string(this->currentFile) + "-Eq7.txt";
+    file.open(fileName, std::ios::out);
+    if (file.fail()) {
+        std::cout << "Error al abrir el archivo" << std::endl;
+        exit(1);
+    }
+    LogsVector* logsBetween = this->getLogsBetweenIps(ip1, ip2);
+    Logs* temp = logsBetween->getFirst();
+    for (int i = 0; i < logsBetween->getSize(); i++) {
+        file << temp->toString() << std::endl;
+        temp = temp->next;
+    }
+    this->currentFile++;
+    file.close();
 }

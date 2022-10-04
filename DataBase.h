@@ -13,6 +13,7 @@ class DataBase{
     private:
         std::map<int, LogsVector* > logsByDate;
         LogsVector *logsByIp[10];
+        int currentFile;
     public:
         DataBase();
         void readFile(std::string fileName);
@@ -29,7 +30,7 @@ class DataBase{
         //Buscar logs entre 2 fechas y guardarlos en un archivo
         void writeToFile(Date* date1,Date* date2,std::string fileName); // ! Falta implementar
         //Buscar logs entre 2 ips y guardarlos en un archivo
-        void writeToFile(Ip* ip1,Ip* ip2,std::string fileName); // ! Falta implementar
+        void writeToFile(Ip* ip1,Ip* ip2); // ! Falta implementar
 };
 
 #endif

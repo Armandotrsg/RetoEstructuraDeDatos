@@ -18,13 +18,13 @@ class LogsVector {
     public:
         LogsVector();
         int getSize();
+        Logs* getFirst();
+        Logs* getLast();
+        void setLast(Logs*);
         void push_back(Logs* log);
         Logs* at(int i);
         void bubbleSortIp();
         void bubbleSortDate();
-        //Búsqueda
-        int searchByDate(Date* date); //Regresa la posición de la primera fecha que sea igual a la fecha dada
-        int searchByIp(std::string ip); //Regresa la posición del primer ip que sea igual al ip dado
         //Sobrecarga de operadores
         Logs* operator[](int index);
         friend std::ostream& operator<<(std::ostream& os,LogsVector& logs);

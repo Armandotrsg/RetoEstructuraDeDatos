@@ -50,6 +50,33 @@ Logs* LogsVector::at(int i) {
 }
 
 /**
+ * @brief Método que regresa el primer objeto Logs del vector
+ *
+ * @return Logs* con el objeto Logs
+ */
+Logs* LogsVector::getFirst() {
+    return this->first;
+}
+
+/**
+ * @brief Método que regresa el último objeto Logs del vector
+ *
+ * @return Logs* con el objeto Logs
+ */
+Logs* LogsVector::getLast() {
+    return this->last;
+}
+
+/**
+ * @brief Método que actualiza el último objeto Logs del vector
+ *
+ * @return Logs* con el objeto Logs
+ */
+void LogsVector::setLast(Logs* log) {
+    this->last = log;
+}
+
+/**
  * @brief Sobrecarga del operador []
  * @param i-int índice del vector
  * @return Logs* con el objeto Logs
@@ -133,47 +160,3 @@ void LogsVector::bubbleSortDate() {
 }
 
 // * (González et al., 2020)
-
-/**
- * @brief Buscar un objeto Logs por su fecha
- * 
- * @param date-Date* con la fecha a buscar
- * @return int con la posición del objeto Logs
- */
-int LogsVector::searchByDate(Date* date) {
-    int pos = -1;
-    Logs* temp = this->first;
-    for (int i = 0; i < this->size; i++) {
-        if (*(temp->date) == date) {
-            return pos = i;
-        } else if (*(temp->date) > date) {
-            return pos = i-1;
-        }
-        temp = temp->next;
-    }
-    return pos = this->size -1;
-}
-
-// * (González et al., 2020)
-
-/**
- * @brief Buscar un objeto Logs por su ip
- * 
- * @param ip-Ip* con la ip a buscar
- * @return int con la posición del objeto Logs
- */
-int LogsVector::searchByIp(std::string ip) {
-    int pos = 0;
-    Logs* temp = this->first;
-    Ip *ip1 = new Ip(ip);
-    while (temp != nullptr) {
-        if (*temp->ip == ip1) {
-            return pos;
-        } else if (*temp->ip > ip1) {
-            return pos - 1;
-        }
-        temp = temp->next;
-        pos++;
-    }
-    return pos = this->size - 1;
-}
