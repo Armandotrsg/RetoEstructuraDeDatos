@@ -71,7 +71,7 @@ LogsVector* DataBase::getLogsBetweenIps(Ip* ip1, Ip* ip2) {
                 logsBetween->push_back(temp);
                 break;
             } else {
-                if (*temp->ip >= ip1 && *temp->next->ip < ip2) {
+                if (*temp->ip >= ip1 && *temp->next->ip <= ip2) {
                     logsBetween->push_back(temp);
                 }
                 if (*temp->next->ip > ip2) {
@@ -103,7 +103,7 @@ LogsVector* DataBase::getLogsBetweenIps(Ip* ip1, Ip* ip2) {
         for (int j = ip1->getFirstDigit() + 1; j <= ip2->getFirstDigit(); j++) {  // Agregar los logs que faltan en todos los vectores hasta el vector donde se encuentra ip2
             Logs* temp2 = this->logsByIp[j]->getFirst();
             for (int k = 0; k < this->logsByIp[j]->getSize(); k++) {
-                if (*temp2->ip < ip2) {
+                if (*temp2->ip <= ip2) {
                     logsBetween->push_back(temp2);
                 } else if (*temp2->ip > ip2) {
                     return logsBetween;
@@ -138,41 +138,65 @@ void DataBase::readFile(std::string fileName) {
         exit(1);
     }
     std::cout << "Leyendo archivo..." << std::endl;
+
+    //Busca que el archivo de los logs ordenados por ip aún no exista
+    std::ifstream file2;
+    file2.open("bitacoraOrdenadaIP-Eq7.txt");
+    bool file2NotExists = file2.fail();
+
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
         Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 5), time.substr(6, 7));
         // Remove first space
         request = request.substr(1, request.length());
         Logs* logDate = new Logs(date, ip, request);
-        Logs* logIp = new Logs(date, ip, request);
         this->addLogByDate(logDate);
-        this->addLogByIp(logIp);
+        if (file2NotExists) {
+            Logs* logIp = new Logs(date, ip, request);
+            this->addLogByIp(logIp);
+        }
     }
     file.close();
     std::cout << "Archivo leido" << std::endl;
     // Sort the logs
     std::cout << "Ordenando..." << std::endl;
-    for (int i = 0; i < 10; i++) {
-        this->logsByIp[i]->bubbleSortIp();
-    }
-    for (auto& month : this->logsByDate) {
+    //Ordena los logs por fecha
+     for (auto& month : this->logsByDate) {
         month.second->bubbleSortDate();
     }
-    // Escribir en un archivo los logs ordenados por ip
-    std::cout << "Escribiendo archivo..." << std::endl;
-    std::ofstream fileIp;
-    fileIp.open("bitacoraOrdenadaIP-Eq7.txt", std::ios::out);
-    if (fileIp.fail()) {
-        std::cout << "Error al abrir el archivo" << std::endl;
-        exit(1);
-    }
-    for (int i = 0; i < 10; i++) {
-        Logs* temp = this->logsByIp[i]->getFirst();
-        while (temp != nullptr) {
-            fileIp << temp->toString() << std::endl;
-            temp = temp->next;
+
+    if (file2NotExists) {  // Si no existe el archivo de logs ordenados, se crea y se ordenan los logs por ip
+        for (int i = 0; i < 10; i++) {
+            this->logsByIp[i]->bubbleSortIp();
+        }
+        // Escribir en un archivo los logs ordenados por ip
+        std::cout << "Escribiendo archivo..." << std::endl;
+        std::ofstream fileIp;
+        fileIp.open("bitacoraOrdenadaIP-Eq7.txt", std::ios::out);
+        if (fileIp.fail()) {
+            std::cout << "Error al abrir el archivo" << std::endl;
+            exit(1);
+        }
+        for (int i = 0; i < 10; i++) {
+            Logs* temp = this->logsByIp[i]->getFirst();
+            while (temp != nullptr) {
+                fileIp << temp->toString() << std::endl;
+                temp = temp->next;
+            }
+        }
+    } else {
+        while (file2 >> month >> day >> time >> ip) {
+            getline(file2, request);
+            Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 5), time.substr(6, 7));
+            // Remove first space
+            request = request.substr(1, request.length());
+            Logs* logIp = new Logs(date, ip, request);
+            this->addLogByIp(logIp);
         }
     }
+    file2.close();
+
+   
 }
 
 /**
