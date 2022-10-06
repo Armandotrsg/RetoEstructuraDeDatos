@@ -180,9 +180,6 @@ std::string Date::toString() {
     std::string hourNum = std::to_string(this->hour);
     std::string minuteNum = std::to_string(this->minute);
     std::string secondNum = std::to_string(this->second);
-    if (dayNum.length() == 1) {
-        dayNum = "0" + dayNum;
-    }
     if (hourNum.length() == 1) {
         hourNum = "0" + hourNum;
     }
