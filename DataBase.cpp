@@ -71,7 +71,7 @@ LogsVector* DataBase::getLogsBetweenIps(Ip* ip1, Ip* ip2) {
                 logsBetween->push_back(temp);
                 break;
             } else {
-                if (*temp->ip >= ip1 && *temp->next->ip <= ip2) {
+                if (*temp->ip >= ip1 && *temp->ip <= ip2) {
                     logsBetween->push_back(temp);
                 }
                 if (*temp->next->ip > ip2) {
