@@ -28,7 +28,7 @@ Ip::Ip(std::string ip) {
     //Create a stream from the string
     std::istringstream iss(ip);
     if (!(iss >> this->first >> this->second >> this->third >> this->fourth >> this->port)) {
-        throw std::invalid_argument("Ingresaste un ip invalido");
+        throw std::invalid_argument("Ingresaste un ip inválido");
     }
 }
 
