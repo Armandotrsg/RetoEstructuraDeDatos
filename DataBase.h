@@ -24,11 +24,11 @@ class DataBase{
         
         friend std::ostream& operator<<(std::ostream& os, DataBase& db);
         //Buscar logs entre 2 fechas
-        LogsVector* getLogsBetweenDates(Date* date1,Date* date2); // ! Falta implementar
+        //LogsVector* getLogsBetweenDates(Date* date1,Date* date2); // ! Falta implementar
         //Buscar logs entre 2 ips
         LogsVector* getLogsBetweenIps(Ip* ip1,Ip* ip2); // ! Falta implementar
         //Buscar logs entre 2 fechas y guardarlos en un archivo
-        void writeToFile(Date* date1,Date* date2,std::string fileName); // ! Falta implementar
+        //void writeToFile(Date* date1,Date* date2,std::string fileName); // ! Falta implementar
         //Buscar logs entre 2 ips y guardarlos en un archivo
         void writeToFile(Ip* ip1,Ip* ip2); // ! Falta implementar
 };
