@@ -5,8 +5,7 @@
  *
  */
 LogsVector::LogsVector() {
-    this->first = nullptr;
-    this->last = nullptr;
+    this->root = nullptr;
     this->size = 0;
 }
 
@@ -20,143 +19,57 @@ int LogsVector::getSize() {
 }
 
 /**
- * @brief Agregar un objeto Logs al vector de su atributo
- *
- * @param logs- vector de apuntadores a Logs
+ * @brief Regresa el nodo raíz del vector
+ * 
+ * @return Logs*
  */
-void LogsVector::push_back(Logs* log) {
-    if (this->first == nullptr) {
-        this->first = log;
-        this->last = log;
+Logs* LogsVector::getRoot() {
+    return this->root;
+}
+
+/**
+ * @brief Método que inserta un nuevo log en el vector
+ * @complexity O(log n)
+ *
+ * @param log- Log a insertar
+ */
+void LogsVector::insert(Logs *log) {
+    insert(log, &(this->root));
+}
+
+/**
+ * @brief Método que inserta un objeto Logs en el vector
+ * @complexity O(log n)
+ *
+ * @param log- apuntador de un objeto Logs
+ * @param node- apuntador a un apuntador de un objeto Logs
+ */
+void LogsVector::insert(Logs *log, Logs **node) {
+    if (*node == nullptr) {  // Si el nodo no existe
+        Logs *tmp = new Logs(log->getDate(), log->ip->toString(), log->getRequest());
+        *node = tmp;
+        this->size++;
     } else {
-        this->last->next = log;
-        this->last = log;
-    }
-    this->size++;
-}
-
-/**
- * @brief Obtener un objeto Logs en la posición i
- *
- * @param i- posición del objeto Logs
- * @return Logs* con el objeto Logs
- */
-Logs* LogsVector::at(int i) {
-    Logs* temp = this->first;
-    for (int j = 0; j < i; j++) {
-        temp = temp->next;
-    }
-    return temp;
-}
-
-/**
- * @brief Método que regresa el primer objeto Logs del vector
- *
- * @return Logs* con el objeto Logs
- */
-Logs* LogsVector::getFirst() {
-    return this->first;
-}
-
-/**
- * @brief Método que regresa el último objeto Logs del vector
- *
- * @return Logs* con el objeto Logs
- */
-Logs* LogsVector::getLast() {
-    return this->last;
-}
-
-/**
- * @brief Método que actualiza el último objeto Logs del vector
- *
- * @return Logs* con el objeto Logs
- */
-void LogsVector::setLast(Logs* log) {
-    this->last = log;
-}
-
-/**
- * @brief Sobrecarga del operador []
- * @param i-int índice del vector
- * @return Logs* con el objeto Logs
- */
-Logs* LogsVector::operator[](int i) {
-    return this->at(i);
-}
-
-/**
- * @brief Sobrecarga del operador <<
- *
- * @param os- ostream
- * @param logs- objeto LogsVector
- * @return ostream&
- */
-std::ostream& operator<<(std::ostream& os, LogsVector& logs) {
-    Logs* temp = logs.first;
-    while (temp != nullptr) {
-        os << temp->toString() << std::endl;
-        temp = temp->next;
-    }
-    return os;
-}
-
-void LogsVector::swap(Logs* a, Logs* b) {
-    Date* tempDate = a->date;
-    Ip* tempIp = a->ip;
-    std::string tempRequest = a->request;
-    a->date = b->date;
-    a->ip = b->ip;
-    a->request = b->request;
-    b->date = tempDate;
-    b->ip = tempIp;
-    b->request = tempRequest;
-}
-
-/**
- * @brief Ordenar el vector de Logs con el algoritmo de burbuja
- * @complexity O(n^2)
- */
-void LogsVector::bubbleSortIp() {
-    bool bandera;
-    Logs* actual = nullptr;
-    for (int i = 1; i < this->size; i++) {
-        bandera = false;
-        actual = this->first;
-        for (int j = 0; j < this->size - i; j++) {
-            if (*(actual->getIp()) > actual->next->getIp()) {
-                this->swap(actual, actual->next);
-                bandera = true;
-            }
-            actual = actual->next;
-        }
-        if (!bandera) {
-            break;
+        if (*log->ip > (*node)->ip) {
+            insert(log, &(*node)->right);
+        } else if (*log->ip < (*node)->ip) {
+            insert(log, &(*node)->left);
+        } else {
+            (*node)->repeat++; // Si el ip es igual, solo incrementamos el contador
         }
     }
 }
 
-/**
- * @brief Ordenar la lista de Logs con el algoritmo de bubble
- * @complexity O(n^2)
- */
-void LogsVector::bubbleSortDate() {
-    bool bandera;
-    Logs* actual = nullptr;
-    for (int i = 1; i < this->size; i++) {
-        bandera = false;
-        actual = this->first;
-        for (int j = 0; j < this->size - i; j++) {
-            if (*(actual->date) > actual->next->date) {
-                this->swap(actual, actual->next);
-                bandera = true;
-            }
-            actual = actual->next;
-        }
-        if (!bandera) {
-            break;
-        }
-    }
+// * (toboqus, s. f.)
+
+void LogsVector::printInorder() {
+    printInorder(this->root);
 }
 
-// * (González et al., 2020)
+void LogsVector::printInorder(Logs *node) {
+    if (node != nullptr) {
+        printInorder(node->left);
+        std::cout << node->toString() << "Repeticiones: " << node->repeat << std::endl;
+        printInorder(node->right);
+    }
+}

@@ -14,7 +14,9 @@ class Logs{
         Date* date;
         Ip* ip;
         std::string request;
-        Logs* next;
+        Logs *left,
+             *right;
+        int repeat;
         //Métodos
         Logs();
         Logs(Date* date, std::string ip, std::string request);

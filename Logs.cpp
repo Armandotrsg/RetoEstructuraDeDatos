@@ -8,7 +8,9 @@ Logs::Logs() {
     this->date = new Date();
     this->ip = new Ip();
     this->request = "";
-    this->next = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
+    this->repeat = 1;
 };
 
 /**
@@ -22,7 +24,9 @@ Logs::Logs(Date* date, std::string ip, std::string request) {
     this->date = date;
     this->ip = new Ip(ip);
     this->request = request;
-    this->next = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
+    this->repeat = 1;
 }
 
 /**

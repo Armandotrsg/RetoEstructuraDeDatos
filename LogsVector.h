@@ -11,23 +11,17 @@
  */
 class LogsVector {
     private:
-        Logs* first;
-        Logs* last;
+        Logs* root;
         int size;
-        void swap(Logs*, Logs*);
+        void insert(Logs* log, Logs **node);
+        void printInorder(Logs* node);
     public:
         LogsVector();
         int getSize();
-        Logs* getFirst();
-        Logs* getLast();
-        void setLast(Logs*);
-        void push_back(Logs* log);
-        Logs* at(int i);
-        void bubbleSortIp();
-        void bubbleSortDate();
-        //Sobrecarga de operadores
-        Logs* operator[](int index);
-        friend std::ostream& operator<<(std::ostream& os,LogsVector& logs);
+        void insert(Logs* log);
+        Logs* getRoot();
+        void printInorder();
+        
 };
 
 #endif
