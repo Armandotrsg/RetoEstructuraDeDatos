@@ -33,29 +33,31 @@ Logs* LogsVector::getRoot() {
  *
  * @param log- Log a insertar
  */
-void LogsVector::insert(Logs *log) {
-    insert(log, &(this->root));
+int LogsVector::insert(Logs *log) {
+    return insert(log, &(this->root));
 }
 
 /**
- * @brief Método que inserta un objeto Logs en el vector
+ * @brief Método que inserta un objeto Logs en el árbol
  * @complexity O(log n)
  *
- * @param log- apuntador de un objeto Logs
- * @param node- apuntador a un apuntador de un objeto Logs
+ * @param log*- apuntador de un objeto Logs
+ * @param node**- apuntador a un apuntador de un objeto Logs
  */
-void LogsVector::insert(Logs *log, Logs **node) {
+int LogsVector::insert(Logs *log, Logs **node) {
     if (*node == nullptr) {  // Si el nodo no existe
-        Logs *tmp = new Logs(log->getDate(), log->ip->toString(), log->getRequest());
+        Logs *tmp = new Logs(log->getDate(), log->ip->toString(), log->getRequest(), log->repeat);
         *node = tmp;
         this->size++;
+        return 1;
     } else {
         if (*log->ip > (*node)->ip) {
-            insert(log, &(*node)->right);
+            return insert(log, &(*node)->right);
         } else if (*log->ip < (*node)->ip) {
-            insert(log, &(*node)->left);
+             return insert(log, &(*node)->left);
         } else {
-            (*node)->repeat++; // Si el ip es igual, solo incrementamos el contador
+            (*node)->increaseRepeat();
+            return (*node)->repeat;
         }
     }
 }
@@ -69,7 +71,7 @@ void LogsVector::printInorder() {
 void LogsVector::printInorder(Logs *node) {
     if (node != nullptr) {
         printInorder(node->left);
-        std::cout << node->toString() << "Repeticiones: " << node->repeat << std::endl;
+        std::cout << node->toString() << std::endl;
         printInorder(node->right);
     }
 }

@@ -60,7 +60,7 @@ int Ip::getFirstDigit() {
  * @return false si no es igual
  */
 bool Ip::operator==(Ip* ip) {
-    return this->first == ip->first && this->second == ip->second && this->third == ip->third && this->fourth == ip->fourth && this->port == ip->port;
+    return this->first == ip->first && this->second == ip->second && this->third == ip->third && this->fourth == ip->fourth;
 }
 
 /**
@@ -93,11 +93,7 @@ bool Ip::operator > (Ip* ip) {
             } else if (this->third == ip->third) {
                 if (this->fourth > ip->fourth) {
                     return true;
-                } else if (this->fourth == ip->fourth) {
-                    if (this->port > ip->port) {
-                        return true;
-                    }
-                }
+                } 
             }
         }
     }

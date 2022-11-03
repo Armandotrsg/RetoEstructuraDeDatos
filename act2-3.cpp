@@ -12,42 +12,8 @@
 #include "DataBase.h"
 
 int main() {
-    DataBase* db = new DataBase();
-    db->readFile("bitacora.txt");  // Lee el archivo de bitacora.txt
-    char option;
-    std::string ip1, ip2;
-    do {
-        std::cout << "Ingrese el primer ip con el formato XXX.XXX.XXX.XXX:XXXX: " << std::endl;
-        std::cin >> ip1;
-        std::cout << "Ingrese el segundo ip con el formato XXX.XXX.XXX.XXX:XXXX: " << std::endl;
-        std::cin >> ip2;
-        try {
-            Ip* ipObj_1 = new Ip(ip1);
-            Ip* ipObj_2 = new Ip(ip2);
-            db->writeToFile(ipObj_1, ipObj_2);
-        } catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
-        }
-        std::cout << "¿Desea buscar otro rango de ips? (s/n)" << std::endl;
-        std::cin >> option;
-    } while (option == 's');
-
-    /* // Preguntar al usuario las fechas para buscar los logs
-    std::cout << "Ingresa una fecha con mes y día (Mmm DD): ";
-    std::string date1;
-    getline(std::cin, date1);
-    std::cout << "Ingresa otra fecha con mes y día (Mmm DD): ";
-    std::string date2;
-    getline(std::cin, date2);
-
-    // Escribir en un archivo
-    try {
-        Date* d1 = new Date(date1);
-        Date* d2 = new Date(date2);
-        db->writeToFile(d1, d2, "bitacoraOrdenada1.3-eq7.txt");
-    } catch (std::exception& error) {
-        std::cerr << error.what() << std::endl;
-    } */
+    DataBase *db = new DataBase("bitacora2.txt");
+    db->printByReps(38);
 
     return 0;
 }

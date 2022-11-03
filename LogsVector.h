@@ -13,12 +13,12 @@ class LogsVector {
     private:
         Logs* root;
         int size;
-        void insert(Logs* log, Logs **node);
+        int insert(Logs* log, Logs **node);
         void printInorder(Logs* node);
     public:
         LogsVector();
         int getSize();
-        void insert(Logs* log);
+        int insert(Logs* log);
         Logs* getRoot();
         void printInorder();
         

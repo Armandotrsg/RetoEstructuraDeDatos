@@ -20,10 +20,13 @@ class Logs{
         //Métodos
         Logs();
         Logs(Date* date, std::string ip, std::string request);
+        Logs(Date* date, std::string ip, std::string request, int repeat);
         Date* getDate();
         Ip* getIp();
         std::string getRequest();
         std::string toString();
+        Logs* copy();
+        void increaseRepeat();
         friend std::ostream& operator<<(std::ostream&, Logs&);
 };
 
