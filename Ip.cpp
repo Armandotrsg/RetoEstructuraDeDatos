@@ -3,7 +3,7 @@
 /**
  * @brief Constructor default de la clase Ip
  *
- * 
+ *
  */
 Ip::Ip() {
     this->first = 0;
@@ -20,12 +20,12 @@ Ip::Ip() {
  * @pre La dirección IP debe tener el formato: XXX.XXX.XXX.XXX:XXXX
  */
 Ip::Ip(std::string ip) {
-    //Replace all the dots with spaces
+    // Replace all the dots with spaces
     std::replace(ip.begin(), ip.end(), '.', ' ');
-    //Replace all the colons with spaces
+    // Replace all the colons with spaces
     std::replace(ip.begin(), ip.end(), ':', ' ');
 
-    //Create a stream from the string
+    // Create a stream from the string
     std::istringstream iss(ip);
     if (!(iss >> this->first >> this->second >> this->third >> this->fourth >> this->port)) {
         throw std::invalid_argument("Ingresaste un ip inválido");
@@ -34,8 +34,8 @@ Ip::Ip(std::string ip) {
 
 /**
  * @brief Convierte el objeto Ip a un string
- * 
- * @return std::string 
+ *
+ * @return std::string
  */
 std::string Ip::toString() {
     std::string s = "";
@@ -45,17 +45,17 @@ std::string Ip::toString() {
 
 /**
  * @brief Obtener el primer dígito del ip
- * 
- * @return int 
+ *
+ * @return int
  */
 int Ip::getFirstDigit() {
-    return this->first/100;
+    return this->first / 100;
 }
 
 /**
  * @brief Comparar si el objeto Ip es igual a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es igual
  * @return false si no es igual
  */
@@ -65,23 +65,23 @@ bool Ip::operator==(Ip* ip) {
 
 /**
  * @brief Comparar si el objeto Ip es diferente a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es diferente
  * @return false si es igual
  */
 bool Ip::operator!=(Ip* ip) {
-    return !(*this == ip); // ? Funciona asi
+    return !(*this == ip);  // ? Funciona asi
 }
 
 /**
  * @brief Comparar si el objeto Ip es mayor a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es mayor
  * @return false si no es mayor
  */
-bool Ip::operator > (Ip* ip) {
+bool Ip::operator>(Ip* ip) {
     if (this->first > ip->first) {
         return true;
     } else if (this->first == ip->first) {
@@ -93,7 +93,7 @@ bool Ip::operator > (Ip* ip) {
             } else if (this->third == ip->third) {
                 if (this->fourth > ip->fourth) {
                     return true;
-                } 
+                }
             }
         }
     }
@@ -102,46 +102,56 @@ bool Ip::operator > (Ip* ip) {
 
 /**
  * @brief Comparar si el objeto Ip es menor a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es menor
  * @return false si no es menor
  */
-bool Ip::operator < (Ip* ip) {
+bool Ip::operator<(Ip* ip) {
     return !(*this > ip) && !(*this == ip);
 }
 
 /**
  * @brief Comparar si el objeto Ip es mayor o igual a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es mayor o igual
  * @return false si no es mayor o igual
  */
-bool Ip::operator >= (Ip* ip) {
+bool Ip::operator>=(Ip* ip) {
     return (*this > ip) || (*this == ip);
 }
 
 /**
  * @brief Comparar si el objeto Ip es menor o igual a otro
- * 
- * @param ip 
+ *
+ * @param ip
  * @return true si es menor o igual
  * @return false si no es menor o igual
  */
-bool Ip::operator <= (Ip* ip) {
+bool Ip::operator<=(Ip* ip) {
     return (*this < ip) || (*this == ip);
 }
 
 /**
  * @brief Sobrecarga del operador << para imprimir el objeto Ip
- * 
- * @param os 
- * @param ip 
- * @return std::ostream& 
+ *
+ * @param os
+ * @param ip
+ * @return std::ostream&
  */
 std::ostream& operator<<(std::ostream& os, Ip& ip) {
     os << ip.toString();
     return os;
 }
 
+/**
+ * @brief Convierte el objeto Ip a un string sin el puerto
+ *
+ * @return std::string
+ */
+std::string Ip::toStringWithoutPort() {
+    std::string s = "";
+    s += std::to_string(this->first) + "." + std::to_string(this->second) + "." + std::to_string(this->third) + "." + std::to_string(this->fourth);
+    return s;
+}

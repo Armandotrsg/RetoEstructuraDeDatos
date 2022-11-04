@@ -20,10 +20,10 @@ int LogsVector::getSize() {
 
 /**
  * @brief Regresa el nodo raíz del vector
- * 
+ *
  * @return Logs*
  */
-Logs* LogsVector::getRoot() {
+Logs *LogsVector::getRoot() {
     return this->root;
 }
 
@@ -33,8 +33,7 @@ Logs* LogsVector::getRoot() {
  *
  * @param log- Log a insertar
  */
-int LogsVector::insert(Logs *log) {
-    std::cout << "Inserting " << *log->getIp() << std::endl;
+void LogsVector::insert(Logs *log) {
     return insert(log, &(this->root));
 }
 
@@ -45,33 +44,21 @@ int LogsVector::insert(Logs *log) {
  * @param log*- apuntador de un objeto Logs
  * @param node**- apuntador a un apuntador de un objeto Logs
  */
-int LogsVector::insert(Logs *log, Logs **node) {
+void LogsVector::insert(Logs *log, Logs **node) {
     if (*node == nullptr) {  // Si el nodo no existe
         Logs *tmp = new Logs(log->getDate(), log->ip->toString(), log->getRequest(), log->repeat);
         *node = tmp;
         this->size++;
-        return 1;
     } else {
         if (log->repeat > (*node)->repeat) {
-            return insert(log, &(*node)->right);
+            insert(log, &(*node)->right);
         } else if (log->repeat < (*node)->repeat) {
-             return insert(log, &(*node)->left);
+            insert(log, &(*node)->left);
         } else {
-            return insert(log, &(*node)->right);
+            insert(log, &(*node)->right);
         }
     }
 }
 
 // * (toboqus, s. f.)
 
-void LogsVector::printInorder() {
-    printInorder(this->root);
-}
-
-void LogsVector::printInorder(Logs *node) {
-    if (node != nullptr) {
-        printInorder(node->left);
-        std::cout << node->toString() << std::endl;
-        printInorder(node->right);
-    }
-}

@@ -6,18 +6,18 @@
 
 /**
  * @brief Clase que representa un log. Tiene un objeto Date, un objeto Ip y un string con el request
- * 
+ *
  */
-class Logs{
+class Logs {
     public:
-        //Atributos
+        // Atributos
         Date* date;
         Ip* ip;
         std::string request;
         Logs *left,
-             *right;
+            *right;
         int repeat;
-        //Métodos
+        // Métodos
         Logs();
         Logs(Date* date, std::string ip, std::string request);
         Logs(Date* date, std::string ip, std::string request, int repeat);

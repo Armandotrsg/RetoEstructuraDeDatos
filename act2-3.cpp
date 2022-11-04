@@ -5,18 +5,27 @@
  *         Diego Martínez Medrano -- A01634562
  * @brief Programa que parsea un archivo de logs y los ordena por mes y día. El usuario puede elegir 2 fechas
  *       para ver los logs que ocurrieron entre esas fechas y los guarda en un archivo de texto.
- * @version 0.2
+ * @version 0.3
  * @date 08-10-2022
  */
 
 #include "DataBase.h"
 
 int main() {
-
-    DataBase *db = new DataBase("bitacora2.txt");
-
-    db->printByReps(38);
-
+    DataBase* db = new DataBase("bitacora2.txt");
+    char option;
+    do {
+        std::cout << "\nIngresa el número de logs que quieres ver que más se repitan: ";
+        int n;
+        std::cin >> n;
+        try {
+            db->getMostRepeated(n);
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+        }
+        std::cout << "¿Quieres ver más logs? (s/n): ";
+        std::cin >> option;
+    } while (option != 'n');
 
     return 0;
 }

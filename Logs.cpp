@@ -90,12 +90,12 @@ std::string Logs::toString() {
  * @return ostream&
  */
 std::ostream& operator<<(std::ostream& os, Logs& logs) {
-    os << *logs.date << " " << *logs.ip << " " << logs.request;
+    os << logs.toString();
     return os;
 }
 
 Logs* Logs::copy() {
-    Logs *tmp = new Logs(this->date, this->ip->toString(), this->request, this->repeat);
+    Logs* tmp = new Logs(this->date, this->ip->toString(), this->request, this->repeat);
     return tmp;
 }
 
