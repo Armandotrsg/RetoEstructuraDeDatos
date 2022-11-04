@@ -26,7 +26,7 @@ class Logs{
         std::string getRequest();
         std::string toString();
         Logs* copy();
-        void increaseRepeat();
+        void setReps(int n);
         friend std::ostream& operator<<(std::ostream&, Logs&);
 };
 

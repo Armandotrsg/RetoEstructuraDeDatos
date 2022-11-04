@@ -1,13 +1,12 @@
 #include "DataBase.h"
-#include <vector>
+
 
 
 DataBase::DataBase(std::string fileName) {
-    LogsVector* mainTree = readFile(fileName);
-    sortByReps(mainTree->getRoot());
+    readFile(fileName);
 }
 
-LogsVector* DataBase::readFile(std::string fileName) {
+void DataBase::readFile(std::string fileName) {
     std::ifstream file;
     std::string line;  // line = month day hour:minute:second ip request
     std::string month, day,
@@ -20,14 +19,9 @@ LogsVector* DataBase::readFile(std::string fileName) {
         std::cout << "Error al abrir el archivo" << std::endl;
         exit(1);
     }
-
-    LogsVector *mainTree = new LogsVector();
-    int max = 0, //Servirá para saber el tamaño del arreglo
-        possibleMax = 0;
     
     //Create logs vector
     std::vector<Logs*> parse;
-
 
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
@@ -44,30 +38,49 @@ LogsVector* DataBase::readFile(std::string fileName) {
         // Remove first space
         request = request.substr(1, request.length());
         Logs* logIp = new Logs(date, ip, request);
-        possibleMax = mainTree->insert(logIp);
-        if (possibleMax > max) {
-            max = possibleMax;
-        }
+        parse.push_back(logIp);
     }
     file.close();
-    this->logsByIp = new LogsVector[max];
-    for (int i = 0; i < max; i++) {
-        this->logsByIp[i] = LogsVector();
+    
+    // Sort logs vector by bubble sort
+    bool bandera;
+    for (int i = 1; i < parse.size(); i++) {
+        bandera = false;
+        for (int j = 0; j < parse.size() - i; j++) {
+            if (*(parse[j + 1]->getIp()) < parse[j]->getIp()) {
+                Logs* temp = parse[j];
+                parse[j] = parse[j + 1];
+                parse[j + 1] = temp;
+                bandera = true;
+            }
+        }
+        if (!bandera) {
+            break;
+        }
     }
-    this->maxReps = max;
-    return mainTree;
-   
-}
 
-void DataBase::sortByReps(Logs* current){ //Recorrido en preorden
-    if (current != nullptr) {
-        Logs* tmp = current->copy();
-        this->logsByIp[tmp->repeat - 1].insert(tmp);
-        sortByReps(current->left);
-        sortByReps(current->right);
+    //Create file with sorted logs
+    std::ofstream file2;
+    file2.open("bitacora3.txt", std::ios::out);
+    for (int i = 0; i < parse.size(); i++) {
+        file2 << parse[i]->getIp()->toString() << std::endl;
     }
+    
+    Logs* current = parse[0];
+    int reps = 1;
+    for (int i = 1; i < parse.size(); i++) {
+        if (*current->getIp() != parse[i]->getIp()) {
+            current->setReps(reps);
+            this->mainTree->insert(current);
+            current = parse[i];
+            reps = 1;
+        } else {
+            reps++;
+        }
+    }
+
 }
 
 void DataBase::printByReps(int reps) {
-    this->logsByIp[reps - 1].printInorder();
+    this->mainTree->printInorder();
 }

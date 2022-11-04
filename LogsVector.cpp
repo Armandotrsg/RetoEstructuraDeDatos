@@ -34,6 +34,7 @@ Logs* LogsVector::getRoot() {
  * @param log- Log a insertar
  */
 int LogsVector::insert(Logs *log) {
+    std::cout << "Inserting " << *log->getIp() << std::endl;
     return insert(log, &(this->root));
 }
 
@@ -51,13 +52,12 @@ int LogsVector::insert(Logs *log, Logs **node) {
         this->size++;
         return 1;
     } else {
-        if (*log->ip > (*node)->ip) {
+        if (log->repeat > (*node)->repeat) {
             return insert(log, &(*node)->right);
-        } else if (*log->ip < (*node)->ip) {
+        } else if (log->repeat < (*node)->repeat) {
              return insert(log, &(*node)->left);
         } else {
-            (*node)->increaseRepeat();
-            return (*node)->repeat;
+            return insert(log, &(*node)->right);
         }
     }
 }

@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <fstream>
+#include <vector>
 #include "LogsVector.h"
 
 /**
@@ -12,13 +13,13 @@
 class DataBase{
     private:
         //std::map<int, LogsVector* > logsByDate;
-        LogsVector *logsByIp;
+        LogsVector *mainTree;
         int maxReps;
 
         void sortByReps(Logs* current);
     public:
         DataBase(std::string fileName);
-        LogsVector* readFile(std::string fileName);
+        void readFile(std::string fileName);
         //void addLogByDate(Logs* log);
         void addLogByIp(Logs* log);
         //LogsVector* atMonth(std::string month);

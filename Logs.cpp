@@ -99,6 +99,6 @@ Logs* Logs::copy() {
     return tmp;
 }
 
-void Logs::increaseRepeat() {
-    this->repeat++;
+void Logs::setReps(int n) {
+    this->repeat = n;
 }
