@@ -13,7 +13,7 @@ class DataBase{
     private:
         //std::map<int, LogsVector* > logsByDate;
         LogsVector *logsByIp;
-        int currentFile;
+        int maxReps;
 
         void sortByReps(Logs* current);
     public:

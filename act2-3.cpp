@@ -12,8 +12,11 @@
 #include "DataBase.h"
 
 int main() {
+
     DataBase *db = new DataBase("bitacora2.txt");
+
     db->printByReps(38);
+
 
     return 0;
 }

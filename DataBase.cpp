@@ -1,4 +1,5 @@
 #include "DataBase.h"
+#include <vector>
 
 
 DataBase::DataBase(std::string fileName) {
@@ -21,8 +22,13 @@ LogsVector* DataBase::readFile(std::string fileName) {
     }
 
     LogsVector *mainTree = new LogsVector();
-    int maxReps = 0, //Servirá para saber el tamaño del arreglo
+    int max = 0, //Servirá para saber el tamaño del arreglo
         possibleMax = 0;
+    
+    //Create logs vector
+    std::vector<Logs*> parse;
+
+
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
 
@@ -39,15 +45,16 @@ LogsVector* DataBase::readFile(std::string fileName) {
         request = request.substr(1, request.length());
         Logs* logIp = new Logs(date, ip, request);
         possibleMax = mainTree->insert(logIp);
-        if (possibleMax > maxReps) {
-            maxReps = possibleMax;
+        if (possibleMax > max) {
+            max = possibleMax;
         }
     }
     file.close();
-    this->logsByIp = new LogsVector[maxReps];
-    for (int i = 0; i < maxReps; i++) {
+    this->logsByIp = new LogsVector[max];
+    for (int i = 0; i < max; i++) {
         this->logsByIp[i] = LogsVector();
     }
+    this->maxReps = max;
     return mainTree;
    
 }
