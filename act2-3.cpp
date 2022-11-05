@@ -12,7 +12,7 @@
 #include "DataBase.h"
 
 int main() {
-    DataBase* db = new DataBase("bitacora2.txt");
+    DataBase* db = new DataBase("bitacora3.txt");
 
     char option;
     do {
@@ -36,4 +36,7 @@ Referencias:
 
 González, L. H., Salinas, E. G., & Cueva, V. M. (2020). Estructura de Datos y
 Algoritmos Fundamentales (1.a ed.). Editorial Digital Tecnológico de Monterrey.
+
+toboqus. (s. f.). BST in C++ with templates. Gist.
+Recuperado 14 de octubre de 2022, de https://gist.github.com/toboqus/7a7b3d334c9ac59f3d5a
 */

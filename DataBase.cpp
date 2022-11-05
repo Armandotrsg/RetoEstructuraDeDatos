@@ -11,57 +11,57 @@ DataBase::DataBase(std::string fileName) {
 
 /**
  * @brief Encuentra el pivote para el quicksort
- * 
- * @param vec- std::vector<Log*> con los logs a ordenar 
- * @param inicio- int con el índice del primer elemento del vector 
- * @param fin- int con el índice del último elemento del vector 
- * 
+ *
+ * @param vec- std::vector<Log*> con los logs a ordenar
+ * @param inicio- int con el índice del primer elemento del vector
+ * @param fin- int con el índice del último elemento del vector
+ *
  * @return int Con la posición del pivote
  */
-int DataBase::partition(std::vector<Logs*>& vec, int inicio, int fin){
+int DataBase::partition(std::vector<Logs*>& vec, int inicio, int fin) {
     Logs* p = vec[inicio];
-    int i = inicio+1;
-    
-    for (int j = i; j <= fin; j++){
-        if (*vec[j]->getIp() < p->getIp()){
+    int i = inicio + 1;
+
+    for (int j = i; j <= fin; j++) {
+        if (*vec[j]->getIp() < p->getIp()) {
             std::swap(vec[i], vec[j]);
             i++;
         }
     }
-    std::swap(vec[inicio], vec[i-1]);
-    return i-1;
+    std::swap(vec[inicio], vec[i - 1]);
+    return i - 1;
 }
 
-// * (toboqus, s. f.)
+// * (González et al., 2020)
 
 /**
  * @brief Ordena un vector de logs por medio del quicksort
- * 
- * @param vec- std::vector<Log*> con los logs a ordenar 
- * @param inicio- int con el índice del primer elemento del vector 
+ *
+ * @param vec- std::vector<Log*> con los logs a ordenar
+ * @param inicio- int con el índice del primer elemento del vector
  * @param fin- int con el índice del último elemento del vector
- * @complexity O(n log n) 
+ * @complexity O(n log n)
  */
 void DataBase::quickSort(std::vector<Logs*>& vec) {
-    quickSort(vec, 0, vec.size()-1);
+    quickSort(vec, 0, vec.size() - 1);
 }
 
 /**
  * @brief Ordena un vector de logs por medio del quicksort
- * 
- * @param vec- std::vector<Log*> con los logs a ordenar 
- * @param inicio- int con el índice del primer elemento del vector 
- * @param fin- int con el índice del último elemento del vector 
+ *
+ * @param vec- std::vector<Log*> con los logs a ordenar
+ * @param inicio- int con el índice del primer elemento del vector
+ * @param fin- int con el índice del último elemento del vector
  */
-void DataBase::quickSort(std::vector<Logs*>& vec, int inicio, int fin){
-    if (inicio < fin){
-        int posPiv =  partition(vec, inicio, fin);
-        quickSort(vec, inicio, posPiv-1);
-        quickSort(vec, posPiv+1, fin);
+void DataBase::quickSort(std::vector<Logs*>& vec, int inicio, int fin) {
+    if (inicio < fin) {
+        int posPiv = partition(vec, inicio, fin);
+        quickSort(vec, inicio, posPiv - 1);
+        quickSort(vec, posPiv + 1, fin);
     }
 }
 
-// * (toboqus, s. f.)
+// * (González et al., 2020)
 
 /**
  * @brief Leer el archivo, lo ordena en un vector con quick sort y guardar los datos en el árbol teniendo como llave
@@ -87,13 +87,6 @@ void DataBase::readFile(std::string fileName) {
 
     while (file >> month >> day >> time >> ip) {
         getline(file, request);
-
-        if (month.length() == 0) {
-            continue;
-        }
-        if (month.length() > 3) {
-            month = month.substr(3, 3);
-        }
 
         Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 2), time.substr(6, 2));
 
