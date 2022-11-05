@@ -1,12 +1,12 @@
 /**
- * @file act1-3.cpp
+ * @file act3-4.cpp
  * @author Armando Terrazas Gómez -- A01640924
  *         Oliver Hérnandez Rebollar -- A01641922
  *         Diego Martínez Medrano -- A01634562
- * @brief Programa que parsea un archivo de logs y los ordena por mes y día. El usuario puede elegir 2 fechas
- *       para ver los logs que ocurrieron entre esas fechas y los guarda en un archivo de texto.
+ * @brief Programa que parsea un archivo de logs y los ordena por medio de un árbol AVL de acuerdo 
+ *       a la cantidad de veces que se repite una IP
  * @version 0.3
- * @date 08-10-2022
+ * @date 05-11-2022
  */
 
 #include "DataBase.h"
