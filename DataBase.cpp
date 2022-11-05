@@ -32,6 +32,8 @@ int DataBase::partition(std::vector<Logs*>& vec, int inicio, int fin){
     return i-1;
 }
 
+// * (toboqus, s. f.)
+
 /**
  * @brief Ordena un vector de logs por medio del quicksort
  * 
@@ -58,6 +60,8 @@ void DataBase::quickSort(std::vector<Logs*>& vec, int inicio, int fin){
         quickSort(vec, posPiv+1, fin);
     }
 }
+
+// * (toboqus, s. f.)
 
 /**
  * @brief Leer el archivo, lo ordena en un vector con quick sort y guardar los datos en el árbol teniendo como llave
