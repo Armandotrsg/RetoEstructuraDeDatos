@@ -10,10 +10,59 @@ DataBase::DataBase(std::string fileName) {
 }
 
 /**
- * @brief Leer el archivo, lo ordena en un vector con bubble sort y guardar los datos en el árbol teniendo como llave
+ * @brief Encuentra el pivote para el quicksort
+ * 
+ * @param vec- std::vector<Log*> con los logs a ordenar 
+ * @param inicio- int con el índice del primer elemento del vector 
+ * @param fin- int con el índice del último elemento del vector 
+ * 
+ * @return int Con la posición del pivote
+ */
+int DataBase::partition(std::vector<Logs*>& vec, int inicio, int fin){
+    Logs* p = vec[inicio];
+    int i = inicio+1;
+    
+    for (int j = i; j <= fin; j++){
+        if (*vec[j]->getIp() < p->getIp()){
+            std::swap(vec[i], vec[j]);
+            i++;
+        }
+    }
+    std::swap(vec[inicio], vec[i-1]);
+    return i-1;
+}
+
+/**
+ * @brief Ordena un vector de logs por medio del quicksort
+ * 
+ * @param vec- std::vector<Log*> con los logs a ordenar 
+ * @param inicio- int con el índice del primer elemento del vector 
+ * @param fin- int con el índice del último elemento del vector
+ * @complexity O(n log n) 
+ */
+void DataBase::quickSort(std::vector<Logs*>& vec) {
+    quickSort(vec, 0, vec.size()-1);
+}
+
+/**
+ * @brief Ordena un vector de logs por medio del quicksort
+ * 
+ * @param vec- std::vector<Log*> con los logs a ordenar 
+ * @param inicio- int con el índice del primer elemento del vector 
+ * @param fin- int con el índice del último elemento del vector 
+ */
+void DataBase::quickSort(std::vector<Logs*>& vec, int inicio, int fin){
+    if (inicio < fin){
+        int posPiv =  partition(vec, inicio, fin);
+        quickSort(vec, inicio, posPiv-1);
+        quickSort(vec, posPiv+1, fin);
+    }
+}
+
+/**
+ * @brief Leer el archivo, lo ordena en un vector con quick sort y guardar los datos en el árbol teniendo como llave
  *       la cantidad de veces que se repite una IP
  * @param fileName- string con el nombre del archivo
- * @complexity O(n^2)
  */
 void DataBase::readFile(std::string fileName) {
     std::ifstream file;
@@ -51,21 +100,7 @@ void DataBase::readFile(std::string fileName) {
     }
     file.close();
 
-    // Sort logs vector by bubble sort
-    bool bandera;
-    for (int i = 1; i < parse.size(); i++) {
-        bandera = false;
-        for (int j = 0; j < parse.size() - i; j++) {
-            if (*(parse[j + 1]->getIp()) < parse[j]->getIp()) {
-                std::swap(parse[j], parse[j + 1]);
-                bandera = true;
-            }
-        }
-        if (!bandera) {
-            break;
-        }
-    }
-
+    quickSort(parse);
     Logs* current = parse[0];
     int reps = 1;
     for (int i = 1; i < parse.size(); i++) {

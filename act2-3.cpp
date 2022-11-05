@@ -10,9 +10,14 @@
  */
 
 #include "DataBase.h"
+#include <chrono>
 
 int main() {
+    auto start = std::chrono::high_resolution_clock::now();
     DataBase* db = new DataBase("bitacora2.txt");
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
+    std::cout << "Tiempo de ejecución: " << duration.count() << " segundos" << std::endl;
     char option;
     do {
         std::cout << "\nIngresa el número de logs que quieres ver que más se repitan: ";

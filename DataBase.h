@@ -18,6 +18,9 @@ class DataBase {
 
         void sortByReps(Logs* current);
         void getMostRepeated(int n, Logs* current, std::vector<Logs*>& vec);
+        void quickSort(std::vector<Logs*>& vec);
+        void quickSort(std::vector<Logs*>& vec, int inicio, int fin);
+        int partition(std::vector<Logs*>& vec, int inicio, int fin);
 
     public:
         DataBase(std::string fileName);
