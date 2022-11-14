@@ -1,4 +1,5 @@
 #include "Ip.h"
+#include <algorithm>
 
 /**
  * @brief Constructor default de la clase Ip
