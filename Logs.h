@@ -14,19 +14,14 @@ class Logs {
         Date* date;
         Ip* ip;
         std::string request;
-        Logs *left,
-            *right;
-        int repeat;
         // Métodos
         Logs();
         Logs(Date* date, std::string ip, std::string request);
-        Logs(Date* date, std::string ip, std::string request, int repeat);
+        ~Logs();
         Date* getDate();
         Ip* getIp();
         std::string getRequest();
         std::string toString();
-        Logs* copy();
-        void setReps(int n);
         friend std::ostream& operator<<(std::ostream&, Logs&);
 };
 
