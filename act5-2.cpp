@@ -17,7 +17,7 @@ int main() {
     char option;
     std::string key;
     do {
-        std::cout << "\nIngresa la ip que deseas buscar: ";
+        std::cout << "\nIngresa la ip que deseas buscar (Formato: XXX.XXX.XXX.XXX): ";
         std::cin >> key;
         try {
             db->print(key);
