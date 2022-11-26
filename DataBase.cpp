@@ -60,7 +60,7 @@ void DataBase::put(Logs* log, bool rehash) {
         this->size++;
     } else {  // Si no está vacía, se agrega el log al vector de logs
         // Verificamos que no se encuentre la ip del log en la lista ligada
-        for (auto it : this->table[pos]) {
+        for (LogsVector* it : this->table[pos]) {
             if (*(it->at(0)->getIp()) == log->getIp()) {  // ! CHECAR
                 it->add(log);
                 return;
@@ -87,7 +87,7 @@ void DataBase::rehashing() {
 
     this->table = new std::list<LogsVector*>[sizeA];
     for (int i = 0; i < oldSize; i++) {
-        for (auto it : oldTable[i]) {
+        for (LogsVector* it : oldTable[i]) {
             for (int j = 0; j < it->size(); j++) {
                 put(it->at(j), false);
             }
@@ -135,7 +135,7 @@ void DataBase::readFile(std::string fileName) {
  */
 LogsVector* DataBase::get(std::string key) {
     int pos = getPos(key);
-    for (auto it : this->table[pos]) {
+    for (LogsVector* it : this->table[pos]) {
         if ((it->at(0)->getIp()->toStringWithoutPort()) == key) {
             return it;
         }
