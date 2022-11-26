@@ -26,10 +26,24 @@ int DataBase::getPos(std::string key) {
     return std::abs(hashCode) % this->sizeA;            // Comprimimos la función hash a que quepa en el areglo
 }
 
+/**
+ * @brief Manda a llamar un método sobrecargado para insertar un log en la tabla hash
+ * 
+ * @param log- Logs* Recibe un log
+ */
 void DataBase::put(Logs* log) {
     put(log, true);
 }
 
+/**
+ * @brief Inserta un log en la tabla hash
+ * @complexity O(1)
+ *
+ * @param log- Logs* Recibe un log
+ * @param rehash- bool Recibe un booleano para saber si se debe hacer rehashing, esto
+ *             para que no se haga rehashing mientras se esté haciendo rehashing y se estén
+ *            volviendo a insertar los logs en la tabla hash
+ */
 void DataBase::put(Logs* log, bool rehash) {
     int pos = getPos(log->getIp()->toStringWithoutPort());  // Obtener la posición
 
@@ -52,13 +66,6 @@ void DataBase::put(Logs* log, bool rehash) {
                 return;
             }
         }
-        /* for (std::list<LogsVector*>::iterator it = this->table[pos].begin(); it != this->table[pos].end(); it++) {
-            if ((*it)->at(0)->getIp() == log->getIp()) {  // Si la ip del log es igual a la ip del LogsVector, se agrega el log al LogsVector
-                (*it)->add(log);
-                found = true;
-                break;
-            }
-        } */
 
         // Si no se encontró la ip del log en los LogsVector, se crea un nuevo LogsVector y se agrega el log
         LogsVector* logsVector = new LogsVector();
@@ -89,6 +96,11 @@ void DataBase::rehashing() {
     delete[] oldTable;
 }
 
+/**
+ * @brief Lee el archivo y lo parsea para guardar los logs en la tabla hash
+ * 
+ * @param fileName- std::string Recibe el nombre del archivo 
+ */
 void DataBase::readFile(std::string fileName) {
     std::ifstream file;
     std::string line; // line = month day hour:minute:second ip request
@@ -116,6 +128,11 @@ void DataBase::readFile(std::string fileName) {
     file.close();
 }
 
+/**
+ * @brief Obtiene un LogsVector* de la tabla hash
+ * @complexity O(1)
+ * 
+ */
 LogsVector* DataBase::get(std::string key) {
     int pos = getPos(key);
     for (auto it : this->table[pos]) {

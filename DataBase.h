@@ -20,11 +20,11 @@ class DataBase {
         int getPos(std::string key);
         void rehashing();
         void put(Logs* log, bool rehash);
+        void put(Logs* log);
+        LogsVector* get(std::string key);
     public:
         DataBase();
         void readFile(std::string fileName);
-        void put(Logs* log);
-        LogsVector* get(std::string key);
         friend std::ostream& operator<<(std::ostream&, DataBase&);
         void print(std::string key);
         
