@@ -14,7 +14,19 @@
 int main() {
     DataBase* db = new DataBase();
     db->readFile("bitacora3-1.txt");
-    db->print("10.15.176.227");
+    char option;
+    std::string key;
+    do {
+        std::cout << "\nIngresa la ip que deseas buscar: ";
+        std::cin >> key;
+        try {
+            db->print(key);
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+        }
+        std::cout << "Deseas buscar otra ip? (s/n): ";
+        std::cin >> option;
+    } while (option == 's');
 
     return 0;
 }
