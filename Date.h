@@ -19,7 +19,6 @@ class Date {
         Date();
         Date(std::string monthDay);
         Date(std::string month, std::string day, std::string hour, std::string minute, std::string second);
-        //Destructor
         int getDay();
         int getMonthNumber();
         std::string getMonthName();

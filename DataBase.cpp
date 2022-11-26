@@ -88,3 +88,60 @@ void DataBase::rehashing() {
     }
     delete[] oldTable;
 }
+
+void DataBase::readFile(std::string fileName) {
+    std::ifstream file;
+    std::string line; // line = month day hour:minute:second ip request
+    std::string month, day,
+        time,  // time = hour:minute:second
+        ip, request;
+    
+    file.open(fileName);
+    if (file.fail()) {
+        std::cout << "Error al abrir el archivo" << std::endl;
+        exit(1);
+    }
+
+    while (file >> month >> day >> time >> ip) {
+        getline(file, request);
+
+        Date* date = new Date(month, day, time.substr(0, 2), time.substr(3, 2), time.substr(6, 2));
+
+        // Remove first space
+        request = request.substr(1, request.length());
+        Logs* logIp = new Logs(date, ip, request);
+        put(logIp);
+    }
+
+    file.close();
+}
+
+LogsVector* DataBase::get(std::string key) {
+    int pos = getPos(key);
+    for (auto it : this->table[pos]) {
+        if ((it->at(0)->getIp()->toStringWithoutPort()) == key) {
+            return it;
+        }
+    }
+    return nullptr;
+}
+
+/**
+ * @brief Imprime el LogsVector de la ip
+ *
+ */
+void DataBase::print(std::string key) {
+    LogsVector* logsVector = get(key);
+    if (logsVector != nullptr) {
+        logsVector->mergeSort();
+        std::cout << "IP: " << key << std::endl;
+        std::cout << "Fechas de acceso:" << std::endl;
+        for (int i = 0; i < logsVector->size(); i++) {
+            std::cout << "\t" << logsVector->at(i)->getDate()->toString() << std::endl;
+        }
+    } else {
+        throw std::invalid_argument("No se encontró la ip");
+    }
+}
+
+

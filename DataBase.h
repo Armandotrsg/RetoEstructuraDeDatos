@@ -26,6 +26,7 @@ class DataBase {
         void put(Logs* log);
         LogsVector* get(std::string key);
         friend std::ostream& operator<<(std::ostream&, DataBase&);
+        void print(std::string key);
         
 };
 
