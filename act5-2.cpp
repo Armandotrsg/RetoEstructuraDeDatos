@@ -22,7 +22,7 @@ int main() {
         try {
             db->print(key);
         } catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
+            std::cerr << e.what() << std::endl;
         }
         std::cout << "Deseas buscar otra ip? (s/n): ";
         std::cin >> option;
